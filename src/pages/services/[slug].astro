@@ -1,0 +1,83 @@
+---
+// /services/{slug}/ — same 11-section template as WordPress (hero card, intro collage, why-choose cards, form,
+// process, solutions, expert team, additional services, client perspectives, gallery, FAQ).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormBand from '../../components/FormBand.astro';
+import Sections from '../../components/Sections.astro';
+import { SERVICES, type Service } from '../../data/services';
+import { PROJECT_TYPES } from '../../config/site';
+import { media } from '../../lib/media';
+import { graph, breadcrumbSchema, serviceSchema, faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return SERVICES.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props as { s: Service };
+const url = `/services/${s.slug}/`;
+const projectMatch: Record<string, string> = {
+  'kitchen-remodeling': 'Kitchen remodeling', 'bathroom-remodel': 'Bathroom remodeling', 'room-addition': 'Room addition',
+  'home-remodeling': 'Complete remodeling', 'new-home-construction': 'New home construction', 'adu-construction': 'ADU construction',
+  'hardscaping-landscaping': 'Hardscaping & landscaping',
+};
+const defaultProject = PROJECT_TYPES.includes(projectMatch[s.slug]) ? projectMatch[s.slug] : undefined;
+const schema = graph(
+  breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }, { name: s.menu, url }]),
+  serviceSchema({ name: s.menu, serviceType: s.serviceType, url, description: s.metaDescription, image: s.heroImage }),
+  faqSchema(s.faqs),
+);
+---
+<BaseLayout title={s.metaTitle} description={s.metaDescription} image={s.heroImage} schema={schema}>
+  <section class="svc-hero">
+    <div class="bg" style={`background-image:url('${media(s.heroImage)}')`} role="img" aria-label={s.menu}></div>
+    <div class="container">
+      <div class="card">
+        <h1>{s.h1}</h1>
+        <h2>{s.subtitle}</h2>
+        <p>{s.heroText}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-grey">
+    <div class="container two-col">
+      <div>
+        <h3 class="title-lg" style="font-size:40px">{s.introTitle}</h3>
+        <p>{s.introText}</p>
+        <a class="btn sm" href="/get-a-free-quote/">Get A Free Quote</a>
+      </div>
+      <div class="collage">
+        <img src={media(s.introImages[0])} alt={`${s.menu} project by Mr. & Mrs. Construction`} width="520" height="360" loading="lazy" />
+        <img src={media(s.introImages[1])} alt={`${s.menu} detail`} width="420" height="300" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <Sections kind="icon-cards" title={s.whyTitle} cards={s.cards} />
+
+  <FormBand id={`form-${s.slug}`} source={s.slug} defaultProject={defaultProject} />
+
+  <Sections kind="process" />
+
+  <section class="section">
+    <div class="container" style="max-width:980px">
+      <h3 class="title-lg center" style="font-size:40px">{s.solutionsTitle}</h3>
+      <hr class="rule tan" />
+      <p style="font-size:18px">{s.solutionsText}</p>
+    </div>
+  </section>
+
+  <section class="section bg-grey" style="padding:60px 0">
+    <div class="container" style="max-width:980px">
+      <h4 class="title-md" style="font-size:32px;font-weight:500">{s.teamTitle}</h4>
+      <p>{s.teamText}</p>
+    </div>
+  </section>
+
+  <Sections kind="additional-services" exclude={s.slug} />
+
+  <Sections kind="videos" title="From Our Clients' Perspectives" dark count={2} />
+
+  <Sections kind="gallery-carousel" />
+
+  <Sections kind="faq" faqs={s.faqs} />
+</BaseLayout>

@@ -1,0 +1,43 @@
+---
+// Blog posts at the site root (/{slug}/) — same URLs as WordPress.
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FormBand from '../components/FormBand.astro';
+import { allPosts } from '../lib/posts';
+import { media } from '../lib/media';
+import { graph, breadcrumbSchema, articleSchema } from '../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await allPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const url = `/${post.id}/`;
+const description = (d.description || d.excerpt || `${d.title} — Mr. & Mrs. Construction & Remodeling, Silicon Valley design-build contractor.`).slice(0, 158);
+---
+<BaseLayout
+  title={`${d.title} | Mr. & Mrs. Construction`}
+  description={description}
+  image={d.image}
+  noindex={d.noindex}
+  type="article"
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog/' }, { name: d.title, url }]), articleSchema({ title: d.title, url, date: d.date, updated: d.updated, image: d.image, description }))}
+>
+  <article>
+    <section class="page-hero" style={d.image ? `background-image:url('${media(d.image)}')` : undefined}>
+      <div class="container">
+        <h1 style="font-size:46px;max-width:960px">{d.title}</h1>
+        <p><time datetime={d.date.toISOString()}>{d.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container prose">
+        <Content />
+        <p style="margin-top:40px"><a class="btn sm" href="/blog/">← All Articles</a> <a class="btn sm" href="/get-a-free-quote/">Get A Free Quote</a></p>
+      </div>
+    </section>
+  </article>
+  <FormBand id="post-form" source={`blog-${post.id}`} style="slate" />
+</BaseLayout>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormBand from '../../components/FormBand.astro';
+import { HOME_SERVICE_ORDER, ordered } from '../../data/services';
+import { PAGE_HEROES } from '../../data/content';
+import { media } from '../../lib/media';
+import { graph, breadcrumbSchema } from '../../lib/schema';
+const services = ordered(HOME_SERVICE_ORDER);
+---
+<BaseLayout
+  title="Remodeling & Construction Services | Mr. & Mrs. Construction"
+  description="Kitchen and bathroom remodeling, ADUs, room additions, whole-home remodels, new custom homes, hardscaping and 3D design — one licensed Silicon Valley team. CA Lic #1068849."
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }]))}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.services)}')`}>
+    <div class="container"><h1>Services</h1><p>Design, permits and construction under one roof — for every kind of project.</p></div>
+  </section>
+  <section class="section bg-grey-2 svc-rows">
+    <div class="container">
+      {services.map((s, i) => (
+        <div class={`row${i % 2 ? ' rev' : ''}`}>
+          <div class="media" role="img" aria-label={s.menu} style={`background-image:url('${media(s.homeImage)}')`}></div>
+          <div>
+            <h2 style="font-size:45px">{s.menu}</h2>
+            <p>{s.homeTeaser}</p>
+            <a class="btn" href={`/services/${s.slug}/`}>Read More</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+  <FormBand id="services-form" source="services-hub" />
+</BaseLayout>

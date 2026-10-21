@@ -1,0 +1,128 @@
+---
+// /service-areas/{city}-ca/ — same template as WordPress, but every heading now uses the right city
+// (the live site says "Ready to start your remodeling Project in Palo Alto?" on every city page).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import FormBand from '../../components/FormBand.astro';
+import Sections from '../../components/Sections.astro';
+import { CITIES, CITY_MEDIA, type City } from '../../data/cities';
+import { bySlug } from '../../data/services';
+import { projectsInCity } from '../../data/gallery';
+import { media } from '../../lib/media';
+import { graph, breadcrumbSchema, serviceSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return CITIES.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props as { c: City };
+const C = `${c.name}, CA`;
+const url = `/service-areas/${c.slug}/`;
+const why = bySlug('home-remodeling').cards;
+const local = projectsInCity(c.name);
+const description = `Licensed design-build contractor for kitchen, bathroom and home remodeling, ADUs and additions in ${C}. Free 3D design preview, full permit management. CA Lic #1068849.`;
+const schema = graph(
+  breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Service Areas', url: '/service-area/' }, { name: C, url }]),
+  serviceSchema({ name: `Home remodeling in ${C}`, serviceType: 'Home remodeling', url, description, areaName: C }),
+);
+---
+<BaseLayout title={`Kitchen, Bath & Home Remodeling in ${C} | Mr. & Mrs. Construction`} description={description} schema={schema}>
+  <section class="page-hero" style={`background-image:url('${media(c.tile)}')`}>
+    <div class="container">
+      <h1>Construction &amp; Home Remodeling {C}</h1>
+      <p>Discover unparalleled craftsmanship with Mr. &amp; Mrs. Construction &amp; Remodeling in {C}. Whether you’re building anew or transforming the old, our team offers personalized, high-quality construction services tailored to your unique style and needs.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div class="collage">
+        <img src={media(CITY_MEDIA.introA)} alt={`Remodeling project in ${C}`} width="520" height="360" loading="lazy" />
+        <img src={media(CITY_MEDIA.introB)} alt={`Home renovation detail in ${C}`} width="420" height="300" loading="lazy" />
+      </div>
+      <div>
+        <h2 class="title-lg" style="font-size:40px">Remodeling Services in {C}</h2>
+        <p>Mr. &amp; Mrs. Construction – where our expertise in remodeling and construction meets the unique needs of homeowners. As a provider of remodeling services in {C}, we specialize in kitchen, bathroom, and comprehensive home renovations.</p>
+        <p>Our commitment to quality craftsmanship and customer satisfaction sets us apart as a remodeling contractor {c.name} homeowners can rely on — with design, permits and construction handled by one team.</p>
+        <a class="btn sm" href="/get-a-free-quote/">Ready to Remodel?</a>
+      </div>
+    </div>
+  </section>
+
+  {c.local && (
+    <section class="section bg-grey">
+      <div class="container" style="max-width:980px">
+        <h2 class="title-lg" style="font-size:38px">{c.local.title}</h2>
+        {c.local.paragraphs.map((t) => <p>{t}</p>)}
+      </div>
+    </section>
+  )}
+
+  <section class="section bg-grey-2">
+    <div class="container two-col">
+      <div>
+        <h2 class="title-lg" style="font-size:40px">Home Remodeling {C}</h2>
+        <p>As a home remodeling contractor serving {c.name}, we offer tailored solutions to revitalize your entire home. Whether it’s reimagining your living space or adding new rooms, our team ensures a seamless integration of new designs with your home’s existing character.</p>
+        <p>Trust us to manage every aspect of your home renovation, making the process stress-free and enjoyable.</p>
+        <ul class="check-list">
+          <li><Icon name="check" />Whole home renovations and space reconfigurations</li>
+          <li><Icon name="check" />Upgrades to living rooms, bedrooms, and dining areas</li>
+          <li><Icon name="check" />Durable materials and techniques for long-lasting results</li>
+          <li><Icon name="check" />Energy-efficient upgrades and modernizations</li>
+        </ul>
+      </div>
+      <div class="ba">
+        <figure><img src={media(CITY_MEDIA.homeBefore)} alt="Home before remodeling" width="400" height="300" loading="lazy" /><figcaption>Before</figcaption></figure>
+        <figure><img src={media(CITY_MEDIA.homeAfter)} alt="Home after remodeling" width="400" height="300" loading="lazy" /><figcaption>After</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div class="ba">
+        <figure><img src={media(CITY_MEDIA.kitchenBefore)} alt="Kitchen before remodeling" width="400" height="300" loading="lazy" /><figcaption>Before</figcaption></figure>
+        <figure><img src={media(CITY_MEDIA.kitchenAfter)} alt="Kitchen after remodeling" width="400" height="300" loading="lazy" /><figcaption>After</figcaption></figure>
+      </div>
+      <div>
+        <h2 class="title-lg" style="font-size:40px">Kitchen Remodeling {C}</h2>
+        <p>From new layouts to custom cabinetry, our kitchen remodeling team designs your kitchen in 3D, manages the {c.name} permits and builds it — one team from start to finish.</p>
+        <ul class="check-list">
+          <li><Icon name="check" />Custom kitchen designs to maximize space and efficiency</li>
+          <li><Icon name="check" />High-quality material selection, from countertops to cabinets</li>
+          <li><Icon name="check" />State-of-the-art appliances and modern fixtures</li>
+          <li><Icon name="check" />Seamless integration of lighting and hardware</li>
+        </ul>
+        <p style="margin-top:20px"><a class="btn sm" href="/services/kitchen-remodeling/">Kitchen Remodeling</a> <a class="btn sm" href="/get-a-free-quote/">Get A Free Quote</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-grey-2">
+    <div class="container two-col">
+      <div>
+        <h2 class="title-lg" style="font-size:40px">Bathroom Remodel {C}</h2>
+        <p>Elevate your daily routine with luxury bathroom remodeling services from Mr. &amp; Mrs. Construction, specializing in bathroom remodeling in {C}.</p>
+        <p>We transform your outdated bathroom into a modern sanctuary. From high-end fixtures to custom tile work, our designs prioritize aesthetics and functionality.</p>
+        <ul class="check-list">
+          <li><Icon name="check" />Custom vanity and storage solutions</li>
+          <li><Icon name="check" />Eco-friendly and energy-efficient fixtures</li>
+          <li><Icon name="check" />High-quality materials</li>
+          <li><Icon name="check" />Spa-like features for ultimate relaxation</li>
+        </ul>
+        <p style="margin-top:20px"><a class="btn sm" href="/gallery/">Our Projects Gallery</a></p>
+      </div>
+      <div class="ba">
+        <figure><img src={media(CITY_MEDIA.bathBefore)} alt="Bathroom before remodeling" width="400" height="300" loading="lazy" /><figcaption>Before</figcaption></figure>
+        <figure><img src={media(CITY_MEDIA.bathAfter)} alt="Bathroom after remodeling" width="400" height="300" loading="lazy" /><figcaption>After</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <Sections kind="icon-cards" title="Why Choose Mr. & Mrs. Construction For Your Remodeling Project?" cards={why} />
+
+  {local.length > 0 && <Sections kind="gallery-grid" title={`Our Projects in ${c.name}`} projects={local} />}
+
+  <FormBand id={`form-${c.slug}`} source={`city-${c.slug}`} title={`Ready to start your remodeling project in ${c.name}?`} />
+
+  <Sections kind="cities" title="Other Areas We Serve" exclude={c.name} />
+</BaseLayout>

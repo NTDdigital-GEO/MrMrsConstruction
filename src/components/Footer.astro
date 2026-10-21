@@ -1,0 +1,41 @@
+---
+import Icon from './Icon.astro';
+import { SITE, FOOTER_MENU } from '../config/site';
+import { NAV_SERVICE_ORDER, ordered } from '../data/services';
+import { CITIES } from '../data/cities';
+import { media } from '../lib/media';
+const services = ordered(NAV_SERVICE_ORDER);
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container cols">
+    <div>
+      <h3>Menu</h3>
+      <ul>{FOOTER_MENU.map((m) => <li><a href={m.href}>{m.label}</a></li>)}</ul>
+    </div>
+    <div>
+      <h3>Our Services</h3>
+      <ul>{services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.menu}</a></li>)}</ul>
+    </div>
+    <div>
+      <h3>Services Area</h3>
+      <ul>{CITIES.map((c) => <li><a href={`/service-areas/${c.slug}/`}>{c.name}, CA</a></li>)}</ul>
+    </div>
+    <div class="brand">
+      <img src={media(SITE.logos.rectWhite)} alt={SITE.shortName} width="180" height="55" loading="lazy" />
+      <ul class="contact">
+        <li><Icon name="mail" /><a href={`mailto:${SITE.email}`} data-track="email_click">{SITE.email}</a></li>
+        <li><Icon name="phone" /><a href={SITE.phoneHref} data-track="call_click">{SITE.phone}</a></li>
+        <li><Icon name="pin" /><a href={SITE.mapUrl} target="_blank" rel="noopener" data-track="click_get_directions">{SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.zip}</a></li>
+        <li><Icon name="license" /><a href={SITE.licenseUrl} target="_blank" rel="noopener">CA License #{SITE.license} — verify on CSLB</a></li>
+      </ul>
+      <div class="social">
+        <a href={SITE.socials.instagram} target="_blank" rel="noopener" aria-label="Instagram"><Icon name="instagram" /></a>
+        <a href={SITE.socials.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" /></a>
+        <a href={SITE.socials.houzz} target="_blank" rel="noopener" aria-label="Houzz"><Icon name="houzz" /></a>
+        <a href={SITE.socials.yelp} target="_blank" rel="noopener" aria-label="Yelp"><Icon name="yelp" /></a>
+      </div>
+      <p class="copy">© {year} Mr & Mrs Construction | All Rights Reserved</p>
+    </div>
+  </div>
+</footer>

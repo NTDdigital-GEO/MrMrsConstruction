@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormBand from '../../components/FormBand.astro';
+import Sections from '../../components/Sections.astro';
+import { PAGE_HEROES } from '../../data/content';
+import { media } from '../../lib/media';
+import { graph, breadcrumbSchema } from '../../lib/schema';
+---
+<BaseLayout
+  title="Project Gallery — Silicon Valley Remodels | Mr. & Mrs. Construction"
+  description="Completed kitchens, bathrooms, ADUs and whole-home remodels in Palo Alto, Saratoga, San Jose, Los Gatos, Cupertino, Sunnyvale and more."
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Gallery', url: '/gallery/' }]))}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.gallery)}')`}>
+    <div class="container"><h1>Gallery</h1><p>Real projects, built by our team across Silicon Valley.</p></div>
+  </section>
+  <Sections kind="gallery-grid" title="Projects Photo Gallery" />
+  <FormBand id="gallery-form" source="gallery" />
+</BaseLayout>

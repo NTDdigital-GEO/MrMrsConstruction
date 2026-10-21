@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FormBand from '../components/FormBand.astro';
+import Sections from '../components/Sections.astro';
+import { PAGE_HEROES } from '../data/content';
+import { media } from '../lib/media';
+import { graph, breadcrumbSchema } from '../lib/schema';
+---
+<BaseLayout
+  title="Client Testimonials | Mr. & Mrs. Construction"
+  description="Hear from Silicon Valley homeowners about their kitchen, bathroom, ADU and whole-home projects with Mr. & Mrs. Construction."
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Testimonials', url: '/testimonials/' }]))}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.testimonials)}')`}>
+    <div class="container"><h1>Testimonials</h1><p>Hear from our satisfied clients and discover how Mr. &amp; Mrs. Construction has helped transform their homes with our bespoke remodeling.</p></div>
+  </section>
+  <section class="section" style="padding-bottom:0">
+    <div class="container" style="max-width:980px">
+      <h2 class="title-lg center">Customers Testimonials</h2>
+      <hr class="rule tan" />
+      <p>Each testimonial provides a snapshot of our commitment to excellence and customer satisfaction. From stunning kitchen renovations to expansive room additions, our clients share their experiences of working with us, highlighting our professional service, craftsmanship, and the beautiful results.</p>
+    </div>
+  </section>
+  <Sections kind="videos" title="Watch Our Clients' Stories" count={4} more={false} />
+  <FormBand id="testimonials-form" source="testimonials" />
+</BaseLayout>

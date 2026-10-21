@@ -1,0 +1,19 @@
+---
+// Rewritten for the new site: the WordPress statement described a third-party "VEE" accessibility overlay
+// that is not part of this build. If the client re-installs an overlay, restore that paragraph.
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE } from '../config/site';
+---
+<LegalLayout title="Accessibility Statement | Mr. & Mrs. Construction" description="Mr. & Mrs. Construction is committed to making mrandmrscnr.com accessible to everyone, including people with disabilities." h1="Accessibility Statement" updated="October 2026">
+  <p>Mr. and Mrs. Construction, operating https://mrandmrscnr.com, is committed to ensuring the accessibility of its digital services to all people, with a special emphasis on improving access for individuals with disabilities.</p>
+  <p>Our goal is for this website to meet the Web Content Accessibility Guidelines (WCAG) 2.2, level AA. It is designed with semantic HTML and headings, text alternatives for images, visible keyboard focus, labelled form fields, and layouts that adapt to screen sizes and zoom, and it supports current versions of Chrome, Firefox, Safari and Edge.</p>
+  <h2>Exclusions</h2>
+  <p>While diligent efforts have been made to ensure the accessibility of all pages and elements, there may still be parts or functionalities that are not fully accessible — for example embedded third-party videos. We continue to improve accessibility for everyone.</p>
+  <p>If you encounter an accessibility issue, please contact us with a description of the problem, the page link, your browser and operating system, and any assistive technology used. We will respond promptly.</p>
+  <h2>Contact us</h2>
+  <ul>
+    <li>E-mail: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+    <li>Phone: <a href={SITE.phoneHref}>{SITE.phone}</a></li>
+    <li><a href="/get-a-free-quote/">Contact form</a></li>
+  </ul>
+</LegalLayout>

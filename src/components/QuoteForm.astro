@@ -1,0 +1,68 @@
+---
+// Lead form. variant="full" reproduces the WordPress form (same fields, same order; address fields now optional),
+// variant="short" is the 4-field form for the ads landing page.
+// Submits JSON to SITE.formEndpoint (functions/api/lead.js by default) and redirects to /thank-you/.
+import { SITE, PROJECT_TYPES, HEARD_ABOUT } from '../config/site';
+import { CITIES } from '../data/cities';
+
+interface Props {
+  id: string;
+  variant?: 'full' | 'short';
+  theme?: 'dark' | 'light';
+  source: string;                    // e.g. "home-mid", "kitchen-remodeling", "lp-3d"
+  defaultProject?: string;
+  submitLabel?: string;
+  redirect?: string;
+}
+const { id, variant = 'full', theme = 'dark', source, defaultProject, submitLabel = 'Submit', redirect = '/thank-you/' } = Astro.props;
+---
+<form class={`qform ${theme}`} id={id} data-lead-form data-source={source} data-redirect={redirect} action={SITE.formEndpoint} method="post" novalidate>
+  <div class="grid">
+    <label class="sr-only" for={`${id}-name`}>Name</label>
+    <input id={`${id}-name`} name="name" type="text" placeholder="Name" autocomplete="name" required />
+    <label class="sr-only" for={`${id}-phone`}>Phone</label>
+    <input id={`${id}-phone`} name="phone" type="tel" placeholder="Phone" autocomplete="tel" required />
+    <label class="sr-only" for={`${id}-email`}>E-mail</label>
+    <input id={`${id}-email`} name="email" type="email" placeholder="E-mail" autocomplete="email" required />
+
+    {variant === 'full' && (
+      <>
+        <label class="sr-only" for={`${id}-heard`}>How you heard about us</label>
+        <select id={`${id}-heard`} name="heard">
+          <option value="">How You Heard About Us?</option>
+          {HEARD_ABOUT.map((h) => <option>{h}</option>)}
+        </select>
+      </>
+    )}
+    <label class="sr-only" for={`${id}-project`}>Project type</label>
+    <select id={`${id}-project`} name="project_type" required>
+      <option value="">Project Type</option>
+      {PROJECT_TYPES.map((p) => <option selected={p === defaultProject}>{p}</option>)}
+    </select>
+    <label class="sr-only" for={`${id}-city`}>City</label>
+    <select id={`${id}-city`} name="city">
+      <option value="">City{variant === 'short' ? ' (optional)' : ''}</option>
+      {CITIES.map((c) => <option>{c.name}</option>)}
+      <option>Other</option>
+    </select>
+    {variant === 'full' && (
+      <>
+        <label class="sr-only" for={`${id}-street`}>Street address</label>
+        <input id={`${id}-street`} name="street" type="text" placeholder="Street Address (optional)" autocomplete="address-line1" />
+        <label class="sr-only" for={`${id}-apt`}>Apt, suite, unit</label>
+        <input id={`${id}-apt`} name="apt" type="text" placeholder="Apt, Suite, Unit, Building, Floor, Etc." autocomplete="address-line2" />
+        <label class="sr-only" for={`${id}-zip`}>Zip code</label>
+        <input id={`${id}-zip`} name="zip" type="text" inputmode="numeric" placeholder="Zip Code (optional)" autocomplete="postal-code" />
+      </>
+    )}
+  </div>
+  {/* honeypot + attribution (filled by script) */}
+  <div class="hp" aria-hidden="true"><label>Leave empty<input type="text" name="company_website" tabindex="-1" autocomplete="off" /></label></div>
+  <input type="hidden" name="source" value={source} />
+  <input type="hidden" name="page" value="" />
+  <input type="hidden" name="utm" value="" />
+  <input type="hidden" name="gclid" value="" />
+  {SITE.turnstileSiteKey && <div class="cf-turnstile" data-sitekey={SITE.turnstileSiteKey} data-theme={theme === 'dark' ? 'dark' : 'light'} style="margin-top:16px;display:flex;justify-content:center"></div>}
+  <div class="submit-row"><button type="submit">{submitLabel}</button></div>
+  <p class="status" role="status" aria-live="polite"></p>
+</form>

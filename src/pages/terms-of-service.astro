@@ -1,0 +1,20 @@
+---
+// DRAFT — have the client's counsel review before launch.
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE } from '../config/site';
+---
+<LegalLayout title="Terms of Service | Mr. & Mrs. Construction" description="Terms that apply to the use of mrandmrscnr.com." h1="Terms of Service" updated="October 2026">
+  <p>By using mrandmrscnr.com you agree to these terms.</p>
+  <h2>Information only</h2>
+  <p>Content on this website — including cost ranges, timelines, articles and images — is general information, not a quote, proposal or professional advice. Every project is priced and scheduled in a written proposal and governed by a signed contract.</p>
+  <h2>Licensing</h2>
+  <p>{SITE.legalName} holds California contractor license #{SITE.license}. You can verify it at <a href={SITE.licenseUrl} target="_blank" rel="noopener">cslb.ca.gov</a>.</p>
+  <h2>Project photos and content</h2>
+  <p>Photos, renderings, text and logos on this site belong to {SITE.shortName} or are used with permission. Do not copy or reuse them without written consent.</p>
+  <h2>Third-party links</h2>
+  <p>Links to other sites (such as YouTube, Houzz, Yelp or city permit offices) are provided for convenience; we are not responsible for their content.</p>
+  <h2>Limitation of liability</h2>
+  <p>To the extent permitted by law, we are not liable for damages arising from use of this website. Nothing here limits rights you have under a signed construction contract or California law.</p>
+  <h2>Contact</h2>
+  <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a> · <a href={SITE.phoneHref}>{SITE.phone}</a></p>
+</LegalLayout>

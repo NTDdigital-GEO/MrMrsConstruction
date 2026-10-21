@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+import { PAGE_HEROES } from '../data/content';
+import { media } from '../lib/media';
+import { graph, breadcrumbSchema } from '../lib/schema';
+---
+<BaseLayout
+  title="Refer a Friend — Up to $1,000 | Mr. & Mrs. Construction"
+  description="Refer a friend to Mr. & Mrs. Construction and receive a check for up to $1,000 when they sign a contract."
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Refer a friend', url: '/refer-a-friend/' }]))}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.refer)}')`}>
+    <div class="container"><h1>Refer a friend</h1><p>As a big thank you for helping our business grow, we will write you a check for up to $1,000 for a signed contract.</p></div>
+  </section>
+  <section class="section">
+    <div class="container" style="max-width:900px">
+      <form class="qform light" id="refer-form" data-lead-form data-source="referral" data-redirect="/thank-you/?type=referral" action={SITE.formEndpoint} method="post">
+        <h2 class="title-md" style="font-weight:500">Your Details</h2>
+        <div class="grid">
+          <input name="name" placeholder="Name" autocomplete="name" required aria-label="Your name" />
+          <input name="phone" type="tel" placeholder="Phone" autocomplete="tel" aria-label="Your phone" />
+          <input name="email" type="email" placeholder="Email" autocomplete="email" required aria-label="Your email" />
+        </div>
+        <h2 class="title-md" style="font-weight:500;margin-top:26px">Your Friend's Details</h2>
+        <div class="grid">
+          <input name="friend_name" placeholder="Name" required aria-label="Friend's name" />
+          <input name="friend_phone" type="tel" placeholder="Phone" aria-label="Friend's phone" />
+          <input name="friend_email" type="email" placeholder="Email" required aria-label="Friend's email" />
+          <textarea class="full" name="message" placeholder="Anything we should know about their project?" aria-label="Message"></textarea>
+        </div>
+        <div class="hp" aria-hidden="true"><input type="text" name="company_website" tabindex="-1" autocomplete="off" /></div>
+        <input type="hidden" name="source" value="referral" /><input type="hidden" name="page" value="" /><input type="hidden" name="utm" value="" /><input type="hidden" name="gclid" value="" />
+        <input type="hidden" name="project_type" value="Referral" />
+        <div class="submit-row"><button type="submit">Send</button></div>
+        <p class="status" role="status" aria-live="polite"></p>
+      </form>
+      <p style="font-size:14px;color:#64748B;margin-top:20px">The referral reward is paid once the referred client signs a construction contract. Contact us for full terms.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../config/site';
+import { PAGE_HEROES } from '../data/content';
+import { media } from '../lib/media';
+import { graph, breadcrumbSchema } from '../lib/schema';
+---
+<BaseLayout
+  title="Get a Free Quote | Mr. & Mrs. Construction"
+  description="Request a free, no-obligation quote and 3D design preview for your kitchen, bathroom, ADU, addition or whole-home remodel in Silicon Valley."
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Get a free quote', url: '/get-a-free-quote/' }]), { '@type': 'ContactPage', url: `${SITE.url}/get-a-free-quote/` })}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.quote)}')`}>
+    <div class="container"><h1>Get a free quote</h1><p>Begin your home transformation journey with Mr. &amp; Mrs. Construction by requesting a free quote today!</p></div>
+  </section>
+  <section class="section">
+    <div class="container two-col" style="align-items:start">
+      <div>
+        <h2 class="title-lg" style="font-size:38px">Tell us about your project</h2>
+        <QuoteForm id="quote-page-form" source="quote-page" theme="light" />
+      </div>
+      <div class="bg-grey" style="padding:36px 34px">
+        <h2 class="title-lg" style="font-size:38px">Let's talk!</h2>
+        <ul class="check-list" style="gap:16px">
+          <li><Icon name="pin" /><a href={SITE.mapUrl} target="_blank" rel="noopener">{SITE.address.street}<br />{SITE.address.city}, {SITE.address.region} {SITE.address.zip}</a></li>
+          <li><Icon name="mail" /><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          <li><Icon name="phone" /><a href={SITE.phoneHref}>{SITE.phone}</a></li>
+          <li><Icon name="license" /><a href={SITE.licenseUrl} target="_blank" rel="noopener">CA License #{SITE.license}</a></li>
+        </ul>
+        <p style="margin-top:20px">Every consultation includes a site visit and, for remodeling projects, a 3D design preview so you can see the result before construction begins.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

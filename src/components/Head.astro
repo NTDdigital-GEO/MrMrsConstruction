@@ -1,0 +1,63 @@
+---
+// Self-hosted fonts, Latin subset only (same families as the WordPress theme, no Google Fonts request).
+import '@fontsource/roboto/latin-300.css';
+import '@fontsource/roboto/latin-400.css';
+import '@fontsource/roboto/latin-500.css';
+import '@fontsource/roboto/latin-700.css';
+import '@fontsource/roboto-condensed/latin-300.css';
+import '@fontsource/roboto-condensed/latin-400.css';
+import '@fontsource/roboto-condensed/latin-500.css';
+import '@fontsource/roboto-condensed/latin-600.css';
+import '../styles/global.css';
+import { SITE } from '../config/site';
+import { absMedia } from '../lib/media';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+  schema?: object;
+  type?: 'website' | 'article';
+}
+const { title, description, image = SITE.ogImage, noindex = false, schema, type = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogImage = image.startsWith('http') ? image : absMedia(image);
+const robots = SITE.preview
+  ? 'noindex, nofollow'
+  : noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large';
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+<meta name="google-site-verification" content={SITE.googleSiteVerification} />
+<meta name="theme-color" content="#FFFFFF" />
+<link rel="icon" href={absMedia('/wp-content/uploads/2023/12/Logo_Square_Black-300x300.png')} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.shortName} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+
+{/* Google Tag Manager — both containers live on WordPress today. Meta Pixel + GA4 + Ads tags stay inside GTM.
+    Not loaded on the preview build, so client reviews never reach GA4 / Google Ads. */}
+<script is:inline define:vars={{ ids: SITE.preview ? [] : SITE.gtmIds }}>
+  window.dataLayer = window.dataLayer || [];
+  ids.forEach(function (id) {
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', id);
+  });
+</script>

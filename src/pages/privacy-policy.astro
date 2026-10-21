@@ -1,0 +1,34 @@
+---
+// DRAFT — have the client's counsel review before launch (README > Launch checklist).
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE } from '../config/site';
+---
+<LegalLayout title="Privacy Policy | Mr. & Mrs. Construction" description="How Mr. & Mrs. Construction & Remodeling collects, uses and protects personal information submitted through mrandmrscnr.com." h1="Privacy Policy" updated="October 2026">
+  <p>{SITE.legalName} (“we”, “us”) operates mrandmrscnr.com. This policy explains what personal information we collect, how we use it, and the choices you have.</p>
+  <h2>Information we collect</h2>
+  <ul>
+    <li><strong>Information you give us</strong> — name, phone number, e-mail, city, address and project details you enter in our quote, consultation or referral forms, or share by phone or e-mail.</li>
+    <li><strong>Usage information</strong> — pages visited, device and browser type, approximate location and referring source, collected through cookies and similar technologies (Google Tag Manager, Google Analytics, Google Ads and Meta conversion tools).</li>
+    <li><strong>Call information</strong> — when you call a number shown in our ads, the call’s date, duration and area code may be reported to us by Google.</li>
+  </ul>
+  <h2>How we use it</h2>
+  <ul>
+    <li>To respond to your request, schedule consultations and prepare proposals.</li>
+    <li>To manage projects, permits and customer service if you become a client.</li>
+    <li>To measure and improve our website and advertising, including sharing hashed contact details with advertising platforms to measure conversions.</li>
+    <li>To comply with legal obligations.</li>
+  </ul>
+  <p>We do not sell your personal information for money. Some advertising measurement may be considered “sharing” under California law; you can opt out as described below.</p>
+  <h2>Who we share it with</h2>
+  <p>Service providers that help us operate the website, forms, e-mail, analytics and advertising (for example Google and Meta); subcontractors and design partners working on your project; and authorities when required by law.</p>
+  <h2>Your California privacy rights</h2>
+  <p>California residents may request access to, correction of, or deletion of their personal information, and may opt out of the sale or sharing of personal information and of targeted advertising. To make a request, e-mail <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or call <a href={SITE.phoneHref}>{SITE.phone}</a>. We will not discriminate against you for exercising these rights. Browsers that send a Global Privacy Control signal are treated as an opt-out request.</p>
+  <h2>Cookies</h2>
+  <p>You can block or delete cookies in your browser settings. You can also opt out of personalized ads at <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ad Settings</a> and through your Facebook/Instagram ad preferences.</p>
+  <h2>Retention and security</h2>
+  <p>We keep personal information only as long as needed for the purposes above or as required by law, and we use reasonable safeguards to protect it.</p>
+  <h2>Children</h2>
+  <p>This website is not directed to children under 16, and we do not knowingly collect their information.</p>
+  <h2>Contact</h2>
+  <p>{SITE.legalName}, {SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.zip} · <a href={`mailto:${SITE.email}`}>{SITE.email}</a> · <a href={SITE.phoneHref}>{SITE.phone}</a></p>
+</LegalLayout>

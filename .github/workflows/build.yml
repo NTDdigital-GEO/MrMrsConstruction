@@ -1,0 +1,22 @@
+# Builds the site on every push / pull request so a broken page never reaches Cloudflare Pages.
+# Cloudflare Pages itself deploys from this repo (Git integration) — this workflow is only a safety check.
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run build
+      # Legacy-URL check (every WordPress URL must be rebuilt or 301'd).
+      # Becomes blocking once the blog has been migrated (npm run migrate) — then change to: npm run check
+      - run: npm run check || echo "::warning::Legacy URL check failed — run npm run migrate before cutover"

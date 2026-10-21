@@ -1,0 +1,265 @@
+---
+// Paid-traffic landing page (Google Ads / Meta). noindex via LandingLayout + _headers.
+// Ad message match: append ?service=kitchen|bathroom|adu|addition|remodel|newhome to the final URL.
+import LandingLayout from '../layouts/LandingLayout.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../config/site';
+import { LP } from '../data/landing';
+import { HOME, VIDEO_TESTIMONIALS } from '../data/content';
+import { SERVICES } from '../data/services';
+import { CITIES } from '../data/cities';
+import { media } from '../lib/media';
+import { businessSchema, faqSchema, graph } from '../lib/schema';
+
+const svc = (slug: string) => SERVICES.find((s) => s.slug === slug);
+const proof = LP.proof.filter((p) => p.show !== false);
+const schema = graph(businessSchema(), faqSchema(LP.faqs.map((f) => ({ q: f.q, a: f.a }))));
+---
+<LandingLayout title={LP.title} description={LP.description} image={HOME.threeD.render} schema={schema}
+  ctaLabel="Book a Consultation" ctaShort={LP.ctaShort}>
+
+  <!-- 1. Hero: same Hero_p2.mp4 video as the homepage, headline + short form on top -->
+  <section class="lp-hero" aria-labelledby="lp-h1">
+    <video autoplay muted loop playsinline preload="metadata" poster={media('2024/01/Mr_Mrs_San-Jose_Gold-Creek-Way_3_Print.webp')} aria-hidden="true">
+      <source src={media(SITE.heroVideo)} type="video/mp4" />
+    </video>
+    <div class="container lp-hero-grid">
+      <div class="lp-hero-copy">
+        <p class="lp-eyebrow" data-lp="eyebrow">{LP.hero.eyebrow}</p>
+        <h1 id="lp-h1" data-lp="h1">{LP.hero.h1}</h1>
+        <p class="lp-sub" data-lp="sub">{LP.hero.sub}</p>
+        <div class="lp-hero-actions">
+          <a class="btn lp-btn-light" href="#consult" data-track="click_get_quote">{LP.cta}</a>
+          <a class="lp-hero-call" href={SITE.phoneHref}>or call <strong>{SITE.phone}</strong></a>
+        </div>
+      </div>
+      <div class="lp-form-card" id="consult">
+        <h2>{LP.formTitle}</h2>
+        <p class="lp-form-note">{LP.formNote}</p>
+        <QuoteForm id="lp-form-top" variant="short" theme="light" source="lp-3d-hero" submitLabel="Book My Consultation" />
+        <p class="lp-form-reply">{LP.formReply}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Proof bar (verifiable facts only) -->
+  <section class="lp-proof" aria-label="Credentials">
+    <div class="container">
+      {proof.map((p) => (
+        <div>
+          {p.href === 'license'
+            ? <a href={SITE.licenseUrl} target="_blank" rel="noopener"><strong>{p.value}</strong></a>
+            : <strong>{p.value}</strong>}
+          <span>{p.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 3. Problem -->
+  <section class="section" aria-labelledby="lp-problem">
+    <div class="container">
+      <div class="lp-head">
+        <p class="lp-kicker">{LP.problem.kicker}</p>
+        <h2 id="lp-problem" class="title-lg">{LP.problem.title}</h2>
+        <hr class="rule tan" />
+        {LP.problem.text.map((t) => <p class="lp-lead">{t}</p>)}
+      </div>
+      <div class="lp-cards three">
+        {LP.problem.cards.map((c) => (
+          <div class="lp-card">
+            <Icon name={c.icon} />
+            <h3>{c.title}</h3>
+            <p>{c.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Method: 4 steps on the homepage "Why Us" photo + glass cards -->
+  <section class="why lp-method" style={`background-image:url('${media(HOME.whyBg)}')`} aria-labelledby="lp-method">
+    <div class="container">
+      <div class="lp-head light">
+        <p class="lp-kicker">{LP.method.kicker}</p>
+        <h2 id="lp-method" class="title-lg">{LP.method.title}</h2>
+        <hr class="rule white" />
+        <p class="lp-lead">{LP.method.text}</p>
+      </div>
+      <ol class="lp-steps">
+        {LP.method.steps.map((s) => (
+          <li class="glass">
+            <span class="n">{s.n}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="center lp-cta-row">
+        <a class="btn lp-btn-light" href="#consult" data-track="click_get_quote">{LP.cta}</a>
+        <span>No obligation · We come to you</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. The offer -->
+  <section class="section bg-grey" aria-labelledby="lp-offer">
+    <div class="container split">
+      <div>
+        <p class="lp-kicker">{LP.offer.kicker}</p>
+        <h2 id="lp-offer" class="title-lg">{LP.offer.title}</h2>
+        <hr class="rule tan left" />
+        <p class="lp-lead">{LP.offer.text}</p>
+        <ul class="check-list">
+          {LP.offer.items.map((i) => <li><Icon name="check" />{i}</li>)}
+        </ul>
+        <a class="btn" href="#consult" style="margin-top:28px" data-track="click_get_quote">{LP.cta}</a>
+      </div>
+      <figure class="lp-offer-img">
+        <img src={media(LP.offer.image)} alt="Photorealistic 3D design rendering of a remodel" width="800" height="500" loading="lazy" />
+        <figcaption>3D design preview</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 6. Rendered first, then built (compare slider) -->
+  <section class="section" aria-labelledby="lp-proof3d">
+    <div class="container split">
+      <div class="compare">
+        <img src={media(HOME.threeD.photo)} alt="Finished remodel photograph" width="800" height="500" loading="lazy" />
+        <img class="top" src={media(HOME.threeD.render)} alt="3D design rendering of the same space" width="800" height="500" loading="lazy" />
+        <span class="lbl l">3D design</span><span class="lbl r">Built</span>
+        <span class="handle"></span>
+        <input type="range" min="0" max="100" value="50" aria-label="Compare 3D design and finished space" />
+      </div>
+      <div>
+        <p class="lp-kicker">Proof</p>
+        <h2 id="lp-proof3d" class="title-lg">Rendered first. Then built.</h2>
+        <hr class="rule tan left" />
+        <p>Your preview is drawn from your measurements and your selections, so the finished room looks the way you approved it. Drag the slider to compare a 3D design with the completed space.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Real video testimonials (same YouTube videos as the homepage) -->
+  <section class="testi-band" aria-labelledby="lp-videos">
+    <div class="container">
+      <h2 id="lp-videos">Real Stories, Real Transformations</h2>
+      <p class="lp-lead center" style="color:#E5E7EB">Silicon Valley homeowners describe working with our team — in their own words.</p>
+      <div class="videos" style="margin-top:30px">
+        {VIDEO_TESTIMONIALS.slice(0, 2).map((v) => (
+          <button class="yt" type="button" data-yt={v.id} aria-label={v.alt} style={`background-image:url('${media(v.overlay)}')`}>
+            <span class="play"><Icon name="play" /></span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Services with typical investment -->
+  <section class="section bg-grey-2" aria-labelledby="lp-services">
+    <div class="container">
+      <div class="lp-head">
+        <p class="lp-kicker">What we build</p>
+        <h2 id="lp-services" class="title-lg">Six project types. One way of working.</h2>
+        <hr class="rule tan" />
+      </div>
+      <div class="lp-svc">
+        {LP.services.map((s) => {
+          const d = svc(s.slug);
+          return (
+            <div class="lp-svc-card">
+              {d && <img src={media(d.cardImage)} alt={s.title} width="400" height="280" loading="lazy" />}
+              <div>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+                {LP.showPricing && <p class="price">Typical investment <strong>{s.price}</strong></p>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Commitments in writing -->
+  <section class="section" aria-labelledby="lp-commit">
+    <div class="container">
+      <div class="lp-head">
+        <p class="lp-kicker">Risk, reduced</p>
+        <h2 id="lp-commit" class="title-lg">Our commitments, in writing.</h2>
+        <hr class="rule tan" />
+      </div>
+      <div class="lp-cards five">
+        {LP.commitments.map((c) => (
+          <div class="lp-card">
+            <Icon name={c.icon} />
+            <h3>{c.title}</h3>
+            <p>{c.text}</p>
+          </div>
+        ))}
+      </div>
+      <div class="center lp-cta-row">
+        <a class="btn" href="#consult" data-track="click_get_quote">{LP.cta}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Local cities -->
+  <section class="section bg-grey" aria-labelledby="lp-local">
+    <div class="container lp-local">
+      <div>
+        <p class="lp-kicker">{LP.local.kicker}</p>
+        <h2 id="lp-local" class="title-lg">{LP.local.title}</h2>
+        <hr class="rule tan left" />
+        <p>{LP.local.text}</p>
+        <p><strong>Headquartered in Santa Clara. Building across the Peninsula and South Bay.</strong></p>
+      </div>
+      <ul class="lp-chips" aria-label="Cities we serve">
+        {[...CITIES].sort((a, b) => a.name.localeCompare(b.name)).map((c) => <li><Icon name="pin" />{c.name}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 11. FAQ -->
+  <section class="section faq" aria-labelledby="lp-faq">
+    <div class="container" style="max-width:900px">
+      <div class="lp-head">
+        <p class="lp-kicker">Questions</p>
+        <h2 id="lp-faq" class="title-lg">Before you book</h2>
+        <hr class="rule tan" />
+      </div>
+      {LP.faqs.map((f, i) => (
+        <details open={i === 0}>
+          <summary>{f.q}</summary>
+          <div><p>{f.a}</p></div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- 12. Close: slate form band, same form component -->
+  <section class="form-band slate lp-close" aria-labelledby="lp-close">
+    <div class="container" style="max-width:980px">
+      <h2 id="lp-close">{LP.close.title}</h2>
+      <p class="center" style="color:#E5E7EB;margin:-6px 0 28px">{LP.close.text}</p>
+      <QuoteForm id="lp-form-bottom" variant="short" source="lp-3d-close" submitLabel="Book My Consultation" />
+      <p class="call">Prefer to talk first? Call <a href={SITE.phoneHref}>{SITE.phone}</a></p>
+    </div>
+  </section>
+
+  <!-- Message match: swap headline + preselect project type from ?service= -->
+  <script is:inline define:vars={{ variants: LP.variants }}>
+    (function () {
+      var key = (new URLSearchParams(location.search).get('service') || '').toLowerCase();
+      var v = variants[key];
+      if (!v) return;
+      ['eyebrow', 'h1', 'sub'].forEach(function (k) {
+        var el = document.querySelector('[data-lp="' + k + '"]');
+        if (el) el.textContent = v[k];
+      });
+      document.querySelectorAll('select[name="project_type"]').forEach(function (s) { s.value = v.project; });
+    })();
+  </script>
+</LandingLayout>

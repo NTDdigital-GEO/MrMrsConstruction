@@ -1,0 +1,14 @@
+---
+import BaseLayout from './BaseLayout.astro';
+interface Props { title: string; description: string; h1: string; updated?: string; noindex?: boolean }
+const { title, description, h1, updated, noindex } = Astro.props;
+---
+<BaseLayout title={title} description={description} noindex={noindex}>
+  <section class="section" style="padding-top:60px">
+    <div class="container prose">
+      <h1 class="title-lg" style="text-transform:none">{h1}</h1>
+      {updated && <p style="color:#64748B">Last updated: {updated}</p>}
+      <slot />
+    </div>
+  </section>
+</BaseLayout>

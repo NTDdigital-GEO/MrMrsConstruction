@@ -1,0 +1,156 @@
+---
+// Homepage — same sections, order, media and copy as the live WordPress homepage (incl. the hero video).
+// Changes are invisible to visitors: semantic headings, fixed form typos, schema, faster loading.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import FormBand from '../components/FormBand.astro';
+import Sections from '../components/Sections.astro';
+import { SITE } from '../config/site';
+import { media } from '../lib/media';
+import { graph } from '../lib/schema';
+import { HOME, HOME_WHY_US } from '../data/content';
+import { HOME_SERVICE_ORDER, ordered } from '../data/services';
+import { latestPosts } from '../lib/posts';
+
+const services = ordered(HOME_SERVICE_ORDER);
+const posts = await latestPosts(8);
+const schema = graph({ '@type': 'WebPage', '@id': `${SITE.url}/#webpage`, url: `${SITE.url}/`, name: 'Silicon Valley Remodeling & ADU Builder | Mr. & Mrs. Construction', isPartOf: { '@id': `${SITE.url}/#website` }, about: { '@id': `${SITE.url}/#organization` } });
+---
+<BaseLayout
+  title="Silicon Valley Remodeling & ADU Builder | Mr. & Mrs. Construction"
+  description="Licensed design-build remodeler in Santa Clara (CA Lic #1068849). Kitchens, baths, ADUs & additions across 19 Bay Area cities. Free 3D design preview."
+  schema={schema}
+>
+  <!-- 1. Hero video -->
+  <section class="hero-video" aria-label="Mr. & Mrs. Construction">
+    <video autoplay muted loop playsinline preload="metadata" poster={media('2024/01/Mr_Mrs_San-Jose_Gold-Creek-Way_3_Print.webp')}>
+      <source src={media(SITE.heroVideo)} type="video/mp4" />
+    </video>
+    <div class="container">
+      <div class="hero-box">
+        <img src={media(SITE.logos.squareTaglineWhite)} alt="Mr. & Mrs. Construction & Remodeling" width="118" height="118" />
+        <div>
+          <p class="tag">Build Your Dream<br />Into Reality</p>
+          <a class="tel" href={SITE.phoneHref}>{SITE.phone}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Intro: H1 + two images -->
+  <section class="intro">
+    <div class="container grid">
+      <div>
+        <h1>{HOME.h1}</h1>
+        <p>{HOME.intro}</p>
+        <a class="btn" href="/about-us/">Keep Reading</a>
+      </div>
+      <div class="pics">
+        <div class="pic"><img src={media(HOME.introImages[0])} alt="Remodeled Silicon Valley kitchen with custom cabinetry" width="420" height="420" fetchpriority="high" /></div>
+        <div class="pic"><img src={media(HOME.introImages[1])} alt="San Jose remodel by Mr. & Mrs. Construction" width="420" height="420" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Our Services (zig-zag rows) -->
+  <section class="section bg-grey-2 svc-rows" aria-labelledby="our-services">
+    <div class="container">
+      <h2 id="our-services" class="title-xl center" style="margin-bottom:0">Our Services</h2>
+      <p class="title-md center" style="font-family:var(--head);color:var(--slate)">Unveiling the Potential of Your Home through Expert Remodeling</p>
+      {services.map((s, i) => (
+        <div class={`row${i % 2 ? ' rev' : ''}`}>
+          <div class="media" role="img" aria-label={s.menu} style={`background-image:url('${media(s.homeImage)}')`}></div>
+          <div>
+            <h3 class="h4" style="font-size:45px">{s.menu === 'ADU Construction' ? 'ADUs Construction' : s.menu === 'Hardscaping & Landscaping' ? 'Landscaping & Hardscaping' : s.menu}</h3>
+            <p>{s.homeTeaser}</p>
+            <a class="btn" href={`/services/${s.slug}/`}>Read More</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 4. Why Us -->
+  <section class="why" style={`background-image:url('${media(HOME.whyBg)}')`} aria-labelledby="why-us">
+    <div class="container">
+      <h2 id="why-us" class="big">Why<br />Us?</h2>
+      <div class="cards">
+        {HOME_WHY_US.map((c) => (
+          <div class="glass"><Icon name={c.icon} /><h3>{c.title}</h3><p>{c.text}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Quote form -->
+  <FormBand id="home-form-1" source="home-mid" />
+
+  <!-- 6. Projects gallery -->
+  <Sections kind="gallery-grid" />
+
+  <!-- 7. Service areas carousel -->
+  <Sections kind="cities" />
+
+  <!-- 8. Home 3D Design -->
+  <section class="section bg-grey" aria-labelledby="home-3d">
+    <div class="container split">
+      <div class="compare">
+        <img src={media(HOME.threeD.photo)} alt="Finished remodel photograph" width="800" height="500" loading="lazy" />
+        <img class="top" src={media(HOME.threeD.render)} alt="3D design rendering of the same space" width="800" height="500" loading="lazy" />
+        <span class="lbl l">3D design</span><span class="lbl r">Built</span>
+        <span class="handle"></span>
+        <input type="range" min="0" max="100" value="50" aria-label="Compare 3D design and finished space" />
+      </div>
+      <div>
+        <h2 id="home-3d" class="title-lg" style="font-weight:600">{HOME.threeD.title}</h2>
+        <h3 class="title-md" style="font-weight:500">{HOME.threeD.subtitle}</h3>
+        <p>{HOME.threeD.text}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Video testimonials -->
+  <Sections kind="videos" />
+
+  <!-- 10. CTA band -->
+  <section class="section bg-grey cta-band" aria-labelledby="cta-title">
+    <div class="container grid">
+      <div class="side" style={`background-image:url('${media(HOME.cta.left)}')`}></div>
+      <div class="card">
+        <h2 id="cta-title" class="title-lg">{HOME.cta.title}</h2>
+        <hr class="rule tan" style="margin-bottom:20px" />
+        <p>{HOME.cta.text}</p>
+        <a class="btn sm" href="/get-a-free-quote/">Get A Free Quote</a>
+      </div>
+      <div class="side" style={`background-image:url('${media(HOME.cta.right)}')`}></div>
+    </div>
+  </section>
+
+  <!-- 11. Latest articles -->
+  <section class="section" aria-labelledby="latest">
+    <div class="container carousel" data-carousel>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+        <div><h2 id="latest" class="title-lg" style="margin:0;font-weight:400">Latest Articles</h2><hr class="rule tan left" style="margin-bottom:0" /></div>
+        <div class="arrows"><button type="button" data-prev aria-label="Previous"><Icon name="left" /></button><button type="button" data-next aria-label="Next"><Icon name="right" /></button></div>
+      </div>
+      <div class="track" style="margin-top:24px">
+        {posts.map((p) => (
+          <article class="article-card">
+            <img src={media(p.image)} alt="" width="400" height="300" loading="lazy" />
+            <h3>{p.title}</h3>
+            <a class="btn sm" href={`/${p.slug}/`} aria-label={`Read more: ${p.title}`}>Read More</a>
+          </article>
+        ))}
+      </div>
+      <div class="center" style="margin-top:34px"><a class="btn sm" href="/blog/">More Articles <Icon name="arrow" class="caret" /></a></div>
+    </div>
+  </section>
+
+  <!-- 12. Final quote form -->
+  <FormBand id="home-form-2" source="home-bottom" style="slate" />
+</BaseLayout>
+
+<style>
+  .h4 { font-family: var(--head); font-weight: 500; line-height: 1.2; }
+  .btn .caret { width: 16px; height: 16px; fill: currentColor; }
+</style>

@@ -1,0 +1,24 @@
+---
+// Link-in-bio page used from Instagram (existed on WordPress). noindex.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+const links = [
+  ['Book a Free 3D Design Consultation', '/free-3d-design-consultation/?utm_source=instagram&utm_medium=social&utm_campaign=bio'],
+  ['Get a Free Quote', '/get-a-free-quote/?utm_source=instagram&utm_medium=social&utm_campaign=bio'],
+  ['Project Gallery', '/gallery/'],
+  ['Client Video Testimonials', '/testimonials/'],
+  ['Refer a Friend — up to $1,000', '/refer-a-friend/'],
+  [`Call ${SITE.phone}`, SITE.phoneHref],
+];
+---
+<BaseLayout title="Mr. & Mrs. Construction — Links" description="Quick links from Instagram." noindex>
+  <section class="section">
+    <div class="container center" style="max-width:520px">
+      <h1 class="title-lg" style="font-size:34px">Mr. &amp; Mrs. Construction</h1>
+      <p>Design · Permits · Build — Silicon Valley since 1999</p>
+      <div style="display:grid;gap:14px;margin-top:24px">
+        {links.map(([l, h]) => <a class="btn" style="justify-content:center" href={h}>{l}</a>)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,50 @@
+---
+// /blog/, /blog/2/, ... (old WP URLs /blog/page/N/ are 301-redirected in public/_redirects)
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { allPosts } from '../../lib/posts';
+import { PAGE_HEROES } from '../../data/content';
+import { media } from '../../lib/media';
+import { graph, breadcrumbSchema } from '../../lib/schema';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = (await allPosts()).filter((p) => !p.data.noindex);
+  const pages = paginate(posts, { pageSize: 12 });
+  return pages.length ? pages : [{ params: { page: undefined }, props: { page: { data: [], currentPage: 1, lastPage: 1 } } }];
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as any;
+const title = page.currentPage > 1 ? `Blog — Page ${page.currentPage} | Mr. & Mrs. Construction` : 'Remodeling Blog & Guides | Mr. & Mrs. Construction';
+const pageHref = (n: number) => (n === 1 ? '/blog/' : `/blog/${n}/`);
+---
+<BaseLayout
+  title={title}
+  description="Remodeling ideas, cost and planning guides, ADU advice and local insights from Mr. & Mrs. Construction, a Silicon Valley design-build contractor."
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog/' }]))}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.blog)}')`}>
+    <div class="container"><h1>Blog</h1><p>Welcome to the blog of Mr. &amp; Mrs. Construction — ideas, guides and advice for your next project.</p></div>
+  </section>
+  <section class="section">
+    <div class="container">
+      {page.data.length === 0 && <p class="center">Articles are being migrated. Run <code>npm run migrate</code>.</p>}
+      <div class="gallery-grid" style="grid-template-columns:repeat(3,1fr);gap:26px">
+        {page.data.map((p: any) => (
+          <article class="article-card">
+            {p.data.image && <img src={media(p.data.image)} alt="" width="400" height="300" loading="lazy" />}
+            <h2 style="font:400 19px/1.35 var(--head);padding:0 18px;flex:1">{p.data.title}</h2>
+            <p style="font-size:13px;color:#64748B;margin:0 0 12px">{p.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <a class="btn sm" href={`/${p.id}/`} aria-label={`Read more: ${p.data.title}`}>Read More</a>
+          </article>
+        ))}
+      </div>
+      {page.lastPage > 1 && (
+        <nav class="pagination" aria-label="Blog pages">
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map((n) =>
+            n === page.currentPage ? <span aria-current="page">{n}</span> : <a href={pageHref(n)}>{n}</a>
+          )}
+        </nav>
+      )}
+    </div>
+  </section>
+</BaseLayout>

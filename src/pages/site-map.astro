@@ -1,0 +1,20 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SERVICES } from '../data/services';
+import { CITIES } from '../data/cities';
+import { GALLERY } from '../data/gallery';
+import { allPosts } from '../lib/posts';
+const posts = (await allPosts()).filter((p) => !p.data.noindex);
+const pages = [
+  ['Home', '/'], ['About us', '/about-us/'], ['Testimonials', '/testimonials/'], ['Services', '/services/'], ['Service areas', '/service-area/'],
+  ['Gallery', '/gallery/'], ['Blog', '/blog/'], ['Get a free quote', '/get-a-free-quote/'], ['Refer a friend', '/refer-a-friend/'],
+  ['Accessibility statement', '/accessibility-statement/'], ['Privacy policy', '/privacy-policy/'], ['Terms of service', '/terms-of-service/'],
+];
+---
+<LegalLayout title="Site Map | Mr. & Mrs. Construction" description="All pages on mrandmrscnr.com: services, service areas, project gallery and articles." h1="Site Map">
+  <h2>Pages</h2><ul>{pages.map(([l, h]) => <li><a href={h}>{l}</a></li>)}</ul>
+  <h2>Services</h2><ul>{SERVICES.map((s) => <li><a href={`/services/${s.slug}/`}>{s.menu}</a></li>)}</ul>
+  <h2>Service areas</h2><ul>{CITIES.map((c) => <li><a href={`/service-areas/${c.slug}/`}>{c.name}, CA</a></li>)}</ul>
+  <h2>Project gallery</h2><ul>{GALLERY.map((g) => <li><a href={`/gallery/${g.slug}/`}>{g.title}</a></li>)}</ul>
+  {posts.length > 0 && <><h2>Articles</h2><ul>{posts.map((p) => <li><a href={`/${p.id}/`}>{p.data.title}</a></li>)}</ul></>}
+</LegalLayout>

@@ -1,0 +1,63 @@
+---
+import Icon from './Icon.astro';
+import { SITE, NAV } from '../config/site';
+import { NAV_SERVICE_ORDER, ordered } from '../data/services';
+import { media } from '../lib/media';
+
+const path = Astro.url.pathname;
+const services = ordered(NAV_SERVICE_ORDER).map((s) => ({ label: s.menu, href: `/services/${s.slug}/` }));
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="topbar">
+  <div class="container">
+    <a href={SITE.mapUrl} target="_blank" rel="noopener"><Icon name="pin" />{SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.zip}</a>
+    <a href={SITE.licenseUrl} target="_blank" rel="noopener"><Icon name="shield" />Licensed bonded and insured: Lic #{SITE.license}</a>
+  </div>
+</div>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/" aria-label={`${SITE.shortName} — home`}>
+      <img src={media(SITE.logos.rectBlack)} alt={SITE.shortName} width="170" height="52" />
+    </a>
+    <nav aria-label="Main">
+      <ul class="nav" id="site-nav">
+        {NAV.map((item) => {
+          const children = item.children === 'services' ? services : item.children;
+          return (
+            <li class={children ? 'has-sub' : undefined}>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}{children && <Icon name="caret" class="caret" />}
+              </a>
+              {children && (
+                <ul class="sub">
+                  {children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+    <a class="btn upper hdr-cta" href="/get-a-free-quote/" data-track="click_get_quote">Get a free quote</a>
+    <button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><Icon name="menu" /></button>
+  </div>
+</header>
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const nav = document.getElementById('site-nav');
+  btn?.addEventListener('click', () => {
+    const open = nav!.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  // Mobile: tap a parent item to expand its submenu
+  document.querySelectorAll<HTMLLIElement>('.nav > li.has-sub').forEach((li) => {
+    li.querySelector('a')?.addEventListener('click', (e) => {
+      if (window.matchMedia('(max-width: 900px)').matches && !li.classList.contains('expanded')) {
+        e.preventDefault();
+        li.classList.add('expanded');
+      }
+    });
+  });
+</script>

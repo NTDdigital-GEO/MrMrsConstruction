@@ -1,0 +1,145 @@
+---
+// Small reusable sections used across templates. Pick with the `kind` prop.
+import Icon from './Icon.astro';
+import { media } from '../lib/media';
+import { GALLERY } from '../data/gallery';
+import { CITIES, HOME_CITY_ORDER, cityByName } from '../data/cities';
+import { SERVICES, PROCESS } from '../data/services';
+import { VIDEO_TESTIMONIALS } from '../data/content';
+import type { Faq, Card } from '../data/services';
+
+type Props =
+  | { kind: 'gallery-grid'; limit?: number; title?: string; projects?: typeof GALLERY }
+  | { kind: 'gallery-carousel'; title?: string }
+  | { kind: 'cities'; title?: string; exclude?: string }
+  | { kind: 'videos'; title?: string; count?: number; dark?: boolean; more?: boolean }
+  | { kind: 'additional-services'; exclude?: string }
+  | { kind: 'process' }
+  | { kind: 'faq'; faqs: Faq[]; title?: string }
+  | { kind: 'icon-cards'; title: string; cards: Card[]; bg?: string };
+const p = Astro.props as any;
+const ytThumb = (v: { overlay: string }) => media(v.overlay);
+---
+{p.kind === 'gallery-grid' && (
+  <section class="section" aria-labelledby="gal-title">
+    <div class="container">
+      <h2 id="gal-title" class="title-lg center">{p.title ?? 'Projects Photo Gallery'}</h2>
+      <hr class="rule tan" />
+      <div class="gallery-grid">
+        {(p.projects ?? GALLERY).slice(0, p.limit ?? 99).map((g: any) => (
+          <a href={`/gallery/${g.slug}/`} style={`background-image:url('${media(g.thumb)}')`} aria-label={g.title}><span>{g.title}</span></a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{p.kind === 'gallery-carousel' && (
+  <section class="section bg-grey-2" aria-labelledby="galc-title">
+    <div class="container carousel" data-carousel>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px">
+        <div><h2 id="galc-title" class="title-lg" style="margin:0">{p.title ?? 'Projects Photo Gallery'}</h2><hr class="rule tan left" /></div>
+        <div class="arrows"><button type="button" data-prev aria-label="Previous"><Icon name="left" /></button><button type="button" data-next aria-label="Next"><Icon name="right" /></button></div>
+      </div>
+      <div class="track gallery-grid" style="display:grid">
+        {GALLERY.map((g) => (<a href={`/gallery/${g.slug}/`} style={`background-image:url('${media(g.thumb)}')`} aria-label={g.title}><span>{g.title}</span></a>))}
+      </div>
+    </div>
+  </section>
+)}
+
+{p.kind === 'cities' && (
+  <section class="section" aria-label="Our service areas">
+    <div class="container carousel" data-carousel>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+        <h2 class="title-lg" style="margin:0">{p.title ?? 'Our Services Areas'}</h2>
+        <div class="arrows"><button type="button" data-prev aria-label="Previous"><Icon name="left" /></button><button type="button" data-next aria-label="Next"><Icon name="right" /></button></div>
+      </div>
+      <div class="track" style="margin-top:22px">
+        {HOME_CITY_ORDER.filter((n) => n !== p.exclude).map(cityByName).map((c) => (
+          <a class="city-card" href={`/service-areas/${c.slug}/`}>
+            <div class="img"><img src={media(c.tile)} alt={`${c.name}, CA`} width="400" height="400" loading="lazy" /></div>
+            <div class="label">{c.name}, CA</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{p.kind === 'videos' && (
+  <section class={p.dark ? 'testi-band' : 'section'} aria-labelledby="vid-title">
+    <div class="container">
+      <h2 id="vid-title" class={p.dark ? '' : 'title-lg center'}>{p.title ?? 'Real Stories, Real Transformations'}</h2>
+      <div class="videos" style="margin-top:30px">
+        {VIDEO_TESTIMONIALS.slice(0, p.count ?? 2).map((v) => (
+          <button class="yt" type="button" data-yt={v.id} aria-label={v.alt} style={`background-image:url('${ytThumb(v)}')`}>
+            <span class="play"><Icon name="play" /></span>
+          </button>
+        ))}
+      </div>
+      {p.more !== false && <div class="center" style="margin-top:30px"><a class={p.dark ? 'btn light' : 'btn'} href="/testimonials/">More Testimonials</a></div>}
+    </div>
+  </section>
+)}
+
+{p.kind === 'additional-services' && (
+  <section class="section" aria-label="Additional services">
+    <div class="container carousel" data-carousel>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+        <h2 class="title-lg" style="margin:0">Additional Services Offered</h2>
+        <div class="arrows"><button type="button" data-prev aria-label="Previous"><Icon name="left" /></button><button type="button" data-next aria-label="Next"><Icon name="right" /></button></div>
+      </div>
+      <div class="track" style="margin-top:22px">
+        {SERVICES.filter((s) => s.slug !== p.exclude).map((s) => (
+          <a class="svc-card" href={`/services/${s.slug}/`}><img src={media(s.cardImage)} alt={s.menu} width="400" height="400" loading="lazy" /><h5>{s.menu}</h5></a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{p.kind === 'process' && (
+  <section class="process" aria-labelledby="proc-title">
+    <div class="container grid">
+      <h3 id="proc-title">Our Projects Process</h3>
+      <div class="steps">
+        {PROCESS.map((s, i) => (
+          <div class="step" tabindex="0" style={`background-image:url('${media(s.image)}')`}>
+            <div class="t"><b>{String(i + 1).padStart(2, '0')}. {s.title}</b><span>{s.text}</span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{p.kind === 'faq' && (
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container" style="max-width:960px">
+      <h2 id="faq-title" class="title-lg center">{p.title ?? 'Frequently Asked Questions (FAQs):'}</h2>
+      <div class="faq">
+        {p.faqs.map((f: Faq, i: number) => (
+          <details open={i === 0}>
+            <summary>{f.q}</summary>
+            <div><p>{f.a}</p>{f.list && <ul>{f.list.map((l) => <li>{l}</li>)}</ul>}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{p.kind === 'icon-cards' && (
+  <section class="section" style={p.bg ? `background:${p.bg}` : undefined} aria-labelledby="why-cards">
+    <div class="container">
+      <h3 id="why-cards" class="title-lg center" style="font-size:40px">{p.title}</h3>
+      <hr class="rule tan" />
+      <div class="icon-cards">
+        {p.cards.map((c: Card) => (
+          <div class="icon-card"><Icon name={c.icon} /><h4>{c.title}</h4><p>{c.text}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

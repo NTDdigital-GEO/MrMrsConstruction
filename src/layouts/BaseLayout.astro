@@ -1,0 +1,40 @@
+---
+import Head from '../components/Head.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+  schema?: object;
+  type?: 'website' | 'article';
+}
+const props = Astro.props;
+---
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <Head {...props} />
+    {SITE.turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+  </head>
+  <body>
+    {(SITE.preview ? [] : SITE.gtmIds).map((id) => (
+      <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${id}`} height="0" width="0" style="display:none;visibility:hidden" title="gtm"></iframe></noscript>
+    ))}
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <a class="call-fab" href={SITE.phoneHref} aria-label={`Call ${SITE.phone}`}><Icon name="phone" /></a>
+    <button class="to-top" type="button" aria-label="Back to top"><Icon name="up" /></button>
+    {SITE.preview && <div class="preview-badge" role="note">Preview — not the live site</div>}
+    <script>
+      import '../lib/client.ts';
+    </script>
+  </body>
+</html>

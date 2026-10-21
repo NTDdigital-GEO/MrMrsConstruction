@@ -1,0 +1,29 @@
+{
+  "name": "mrandmrscnr-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mr. & Mrs. Construction & Remodeling — static rebuild of mrandmrscnr.com (Astro). Same template, same URLs, same media.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:ci": "astro build && node scripts/check-urls.mjs",
+    "preview": "astro preview",
+    "migrate": "node scripts/migrate-wp.mjs",
+    "media": "node scripts/pull-media.mjs",
+    "check": "node scripts/check-urls.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/roboto": "^5.3.0",
+    "@fontsource/roboto-condensed": "^5.3.0",
+    "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "linkedom": "^0.18.14",
+    "turndown": "^7.2.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

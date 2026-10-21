@@ -1,0 +1,20 @@
+---
+// "Build Your Dream Into Reality" (photo background) and "Get A Free Quote Now" (slate) form sections.
+import QuoteForm from './QuoteForm.astro';
+import { SITE } from '../config/site';
+import { media } from '../lib/media';
+import { HOME } from '../data/content';
+
+interface Props { id: string; source: string; style?: 'photo' | 'slate'; title?: string; defaultProject?: string; bg?: string }
+const { id, source, style = 'photo', title, defaultProject, bg = HOME.formBg } = Astro.props;
+const heading = title ?? (style === 'photo' ? 'Build Your Dream Into Reality' : 'Get A Free Quote Now');
+---
+<section class={`form-band ${style}`} style={style === 'photo' ? `background-image:url('${media(bg)}')` : undefined} aria-labelledby={`${id}-title`}>
+  <div class="container">
+    <h2 id={`${id}-title`}>{heading}</h2>
+    {style === 'slate' && <p class="call" style="margin:0 0 26px">Or Give Us a Call <a href={SITE.phoneHref}>{SITE.phone}</a></p>}
+    <QuoteForm id={id} source={source} defaultProject={defaultProject} />
+    <p class="form-note">By submitting, you agree to be contacted about your project. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+    {style === 'photo' && <p class="call">Or Give Us a Call: <a href={SITE.phoneHref}>{SITE.phone}</a></p>}
+  </div>
+</section>

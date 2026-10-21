@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormBand from '../../components/FormBand.astro';
+import { GALLERY, type Project } from '../../data/gallery';
+import { cityByName } from '../../data/cities';
+import { media } from '../../lib/media';
+import { graph, breadcrumbSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return GALLERY.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props as { p: Project };
+const city = cityByName(p.city);
+const url = `/gallery/${p.slug}/`;
+---
+<BaseLayout
+  title={`${p.title} — Remodeling in ${p.city}, CA | Mr. & Mrs. Construction`}
+  description={`Photos of a completed remodeling project in ${p.city}, CA by Mr. & Mrs. Construction — design, permits and construction by one licensed team.`}
+  image={p.thumb}
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Gallery', url: '/gallery/' }, { name: p.title, url }]), {
+    '@type': 'ImageGallery', name: p.title, url: `https://mrandmrscnr.com${url}`, associatedMedia: p.images.slice(0, 12).map((i) => ({ '@type': 'ImageObject', contentUrl: `https://mrandmrscnr.com/wp-content/uploads/${i}` })),
+  })}
+>
+  <section class="page-hero" style={`background-image:url('${media(p.thumb)}')`}>
+    <div class="container"><h1>{p.title}</h1><p>{p.city}, CA · {p.images.length} photos</p></div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="lightbox-grid">
+        {p.images.map((img, i) => (
+          <a href={media(img)} data-alt={`${p.title} photo ${i + 1}`}><img src={media(img)} alt={`${p.title} — photo ${i + 1}`} width="400" height="300" loading={i < 6 ? 'eager' : 'lazy'} /></a>
+        ))}
+      </div>
+      <p class="center" style="margin-top:34px">
+        <a class="btn sm" href="/gallery/">All Projects</a>
+        {city && <> <a class="btn sm" href={`/service-areas/${city.slug}/`}>Remodeling in {p.city}</a></>}
+      </p>
+    </div>
+  </section>
+  <dialog class="lightbox"><button type="button" aria-label="Close">×</button><img src="" alt="" /></dialog>
+  <FormBand id={`form-${p.slug}`} source={`gallery-${p.slug}`} />
+</BaseLayout>

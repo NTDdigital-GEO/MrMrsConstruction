@@ -1,0 +1,52 @@
+# Client preview on GitHub Pages: https://<account>.github.io/<repo>/
+# Preview mode = noindex + robots Disallow, GTM off (no GA4 / Google Ads data), forms show a "preview" message,
+# all URLs prefixed with /<repo>/. Production deploys separately on Cloudflare Pages without any of this.
+#
+# One-time setup: repo Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# After launch on Cloudflare: disable this workflow (Actions → Preview on GitHub Pages → Disable) and unpublish Pages.
+name: Preview on GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      # Pull all blog posts from the live WordPress REST API so the preview is complete (not committed).
+      - run: npm run migrate
+        continue-on-error: true
+      - run: npm run build
+        env:
+          PUBLIC_PREVIEW: '1'
+          PREVIEW_BASE: /${{ github.event.repository.name }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.DS_Store
+# Media pulled from WordPress is large; commit it (recommended, Git LFS) or host it on R2/S3 and set PUBLIC_MEDIA_ORIGIN.
+# Uncomment the next line if you host media outside the repo:
+# public/wp-content/uploads/

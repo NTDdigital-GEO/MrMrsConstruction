@@ -1,0 +1,31 @@
+# 301 redirects (Cloudflare Pages / Netlify syntax). Every other WordPress URL is rebuilt 1:1.
+# Test pages from the WordPress site
+/home-test/                 /                       301
+/home-test1/                /                       301
+/home-test1                 /                       301
+
+# Rank Math sitemaps -> Astro sitemap
+/sitemap_index.xml          /sitemap-index.xml      301
+/sitemap.xml                /sitemap-index.xml      301
+/page-sitemap.xml           /sitemap-index.xml      301
+/post-sitemap.xml           /sitemap-index.xml      301
+/services-sitemap.xml       /sitemap-index.xml      301
+/service-areas-sitemap.xml  /sitemap-index.xml      301
+/projects-gallery-sitemap.xml /sitemap-index.xml    301
+
+# Archives that WordPress generated automatically
+/service-areas/             /service-area/          301
+/blog/page/:n/              /blog/:n/               301
+/page/:n/                   /blog/:n/               301
+/category/*                 /blog/                  301
+/tag/*                      /blog/                  301
+/author/*                   /about-us/              301
+/feed/                      /blog/                  301
+/comments/feed/             /blog/                  301
+/projects-gallery/*         /gallery/:splat         301
+/kitchen-remodeling/*       /services/kitchen-remodeling/ 301
+
+# WordPress system paths
+/wp-admin/*                 /                       301
+/wp-login.php               /                       301
+/xmlrpc.php                 /                       301

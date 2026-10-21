@@ -1,0 +1,22 @@
+---
+// Conversion confirmation page (noindex). GTM can use the page view of /thank-you/ as a backup conversion trigger.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+<BaseLayout title="Thank You | Mr. & Mrs. Construction" description="Thank you — we received your request." noindex>
+  <section class="section" style="min-height:52vh;display:flex;align-items:center">
+    <div class="container center" style="max-width:760px">
+      <h1 class="title-lg">Thank you — we received your request</h1>
+      <hr class="rule tan" />
+      <p id="ty-msg" style="font-size:19px">Our team will call you shortly to schedule your consultation. If you’d like to talk now, call <a href={SITE.phoneHref}>{SITE.phone}</a>.</p>
+      <p style="margin-top:28px"><a class="btn sm" href="/gallery/">Browse Our Projects</a> <a class="btn sm" href="/">Back to Home</a></p>
+    </div>
+  </section>
+  <script>
+    const msg = document.getElementById('ty-msg');
+    if (new URLSearchParams(location.search).get('type') === 'referral' && msg) {
+      msg.textContent = 'Thank you for your referral! We will reach out to your friend and keep you updated.';
+    }
+    (window as any).dataLayer?.push({ event: 'lead_thank_you', page_path: location.pathname });
+  </script>
+</BaseLayout>

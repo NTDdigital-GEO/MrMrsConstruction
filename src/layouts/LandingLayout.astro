@@ -1,0 +1,84 @@
+---
+// Ads landing-page shell: same fonts, colours and components as the main site,
+// but a minimal header (logo · phone · CTA), no navigation exits, a slim footer and a mobile sticky CTA bar.
+import Head from '../components/Head.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../config/site';
+import { media } from '../lib/media';
+import '../styles/landing.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  schema?: object;
+  ctaHref?: string;
+  ctaLabel?: string;
+  ctaShort?: string;
+}
+const { ctaHref = '#consult', ctaLabel = 'Book a Consultation', ctaShort = 'Book a Consultation', ...head } = Astro.props;
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <Head {...head} noindex />
+    {SITE.turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+  </head>
+  <body class="lp">
+    {(SITE.preview ? [] : SITE.gtmIds).map((id) => (
+      <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${id}`} height="0" width="0" style="display:none;visibility:hidden" title="gtm"></iframe></noscript>
+    ))}
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="topbar">
+      <div class="container">
+        <span><Icon name="shield" /> <a href={SITE.licenseUrl} target="_blank" rel="noopener">CA License #{SITE.license}</a> · Bonded &amp; insured</span>
+        <span class="hide-sm"><Icon name="pin" /> {SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.zip}</span>
+      </div>
+    </div>
+    <header class="site-header lp-header">
+      <div class="container">
+        <a class="logo" href="/" aria-label={SITE.name}>
+          <img src={media(SITE.logos.rectBlack)} alt={SITE.shortName} width="170" height="52" />
+        </a>
+        <div class="lp-header-actions">
+          <a class="lp-phone" href={SITE.phoneHref} data-track="call_click"><Icon name="phone" /><span>{SITE.phone}</span></a>
+          <a class="btn upper hide-sm" href={ctaHref} data-track="click_get_quote">{ctaLabel}</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="lp-footer">
+      <div class="container">
+        <div>
+          <img src={media(SITE.logos.rectWhite)} alt={SITE.name} width="220" height="60" loading="lazy" />
+          <p>{SITE.address.street}<br />{SITE.address.city}, {SITE.address.region} {SITE.address.zip}</p>
+        </div>
+        <div>
+          <p><a href={SITE.phoneHref}>{SITE.phone}</a><br /><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+          <p>California License #{SITE.license} · <a href={SITE.licenseUrl} target="_blank" rel="noopener">Verify on CSLB</a></p>
+        </div>
+        <nav aria-label="Legal">
+          <a href="/privacy-policy/">Privacy Policy</a>
+          <a href="/terms-of-service/">Terms of Service</a>
+          <a href="/accessibility-statement/">Accessibility Statement</a>
+        </nav>
+      </div>
+      <p class="lp-copy">© {year} {SITE.shortName}. All rights reserved.</p>
+    </footer>
+
+    <div class="lp-sticky" aria-label="Quick actions">
+      <a class="lp-sticky-cta" href={ctaHref} data-track="click_get_quote">{ctaShort}</a>
+      <a class="lp-sticky-call" href={SITE.phoneHref} aria-label={`Call ${SITE.phone}`}><Icon name="phone" /> Call</a>
+    </div>
+
+    {SITE.preview && <div class="preview-badge" role="note">Preview — not the live site</div>}
+    <script>
+      import '../lib/client.ts';
+    </script>
+  </body>
+</html>

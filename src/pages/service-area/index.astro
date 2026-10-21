@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormBand from '../../components/FormBand.astro';
+import { CITIES } from '../../data/cities';
+import { PAGE_HEROES } from '../../data/content';
+import { media } from '../../lib/media';
+import { graph, breadcrumbSchema } from '../../lib/schema';
+const sc = CITIES.filter((c) => c.county === 'Santa Clara County');
+const sm = CITIES.filter((c) => c.county === 'San Mateo County');
+---
+<BaseLayout
+  title="Service Areas — 19 Silicon Valley Cities | Mr. & Mrs. Construction"
+  description="Remodeling, ADU and home construction across Santa Clara and San Mateo counties: Palo Alto, Saratoga, San Jose, Cupertino, Los Gatos, Atherton and 13 more cities."
+  schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Service Areas', url: '/service-area/' }]))}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.areas)}')`}>
+    <div class="container"><h1>Service Areas</h1><p>No matter where you are located within our service areas, Mr. &amp; Mrs. Construction is ready to bring your home improvement dreams to life.</p></div>
+  </section>
+  {[['Santa Clara County', sc], ['San Mateo County', sm]].map(([label, list]) => (
+    <section class="section" style="padding-bottom:20px">
+      <div class="container">
+        <h2 class="title-lg">{label as string}</h2>
+        <hr class="rule tan left" />
+        <div class="gallery-grid" style="grid-template-columns:repeat(4,1fr)">
+          {(list as typeof CITIES).map((c) => (
+            <a class="city-card" href={`/service-areas/${c.slug}/`} style="aspect-ratio:auto;background:#fff">
+              <div class="img"><img src={media(c.tile)} alt={`${c.name}, CA`} width="400" height="400" loading="lazy" /></div>
+              <div class="label">{c.name}, CA</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+  <FormBand id="areas-form" source="service-area-hub" />
+</BaseLayout>

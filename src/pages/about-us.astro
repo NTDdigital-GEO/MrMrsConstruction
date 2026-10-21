@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FormBand from '../components/FormBand.astro';
+import Sections from '../components/Sections.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../config/site';
+import { bySlug } from '../data/services';
+import { PAGE_HEROES, VIDEO_TESTIMONIALS } from '../data/content';
+import { media } from '../lib/media';
+import { graph, breadcrumbSchema } from '../lib/schema';
+const cards = bySlug('home-remodeling').cards;
+const v = VIDEO_TESTIMONIALS[0];
+const schema = graph(
+  breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'About us', url: '/about-us/' }]),
+  { '@type': 'AboutPage', url: `${SITE.url}/about-us/`, name: 'About Mr. & Mrs. Construction', about: { '@id': `${SITE.url}/#organization` } },
+);
+---
+<BaseLayout
+  title="About Us — Family-Owned Since 1999 | Mr. & Mrs. Construction"
+  description="Family-owned Silicon Valley design-build contractor for 25+ years: architects, designers, 3D rendering, city approvals and construction under one roof. CA Lic #1068849."
+  schema={schema}
+>
+  <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.about)}')`}>
+    <div class="container">
+      <h1>About us</h1>
+      <p>For the last 25 years, our professional family has provided excellent house remodeling services, which includes but are not limited to Bathroom Remodel, Kitchen Remodel, Complete Remodel, and Room Addition.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:1000px">
+      <h2 class="title-lg center" style="font-size:40px">Turning Dreams Into Reality<br />The Mr. &amp; Mrs. Construction Story</h2>
+      <hr class="rule tan" />
+      <p style="font-size:18px">At Mr. and Mrs. Construction &amp; Remodeling, we make it our mission to improve your home by bringing your artistic vision into reality. As a local, family-owned construction &amp; remodeling company, we understand the importance of a spacious, luxurious, and affordable house. Our professional team members are highly skilled and experienced in construction and construction management. We have team members with degrees in construction and civil engineering. At our company, we value skilled craftsmanship, material quality, and unmatchable project management. We believe that well-built &amp; long-lasting home remodels can only be created through skilled craftsmen, by using quality materials, building to high quality standards, and supported by proper project management. Professional management also means that we run an efficient company and can also pass the savings on to our clients.</p>
+    </div>
+  </section>
+
+  <section class="section bg-grey">
+    <div class="container"><div class="icon-cards">
+      {cards.map((c) => <div class="icon-card"><Icon name={c.icon} /><h4>{c.title}</h4><p>{c.text}</p></div>)}
+    </div></div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div>
+        <h2 class="title-lg" style="font-size:40px">Building More Than Homes: The Mr. &amp; Mrs. Construction Family</h2>
+        <p>It’s our One-Stop-Shop, where we provide our customers everything they need in order to complete their remodeling. Architects, Designers, Site Measurements, Work Plans, 3D-Rendering, City Approvals, Material Procurement, Contractor’s Execution; each and everything is available to our clients through our unique and professional Customer Care, because we care the most about our clients’ satisfaction.</p>
+        <p><a href={SITE.licenseUrl} target="_blank" rel="noopener">California License #{SITE.license}</a> · Licensed, bonded and insured.</p>
+        <a class="btn sm" href="/testimonials/">More Testimonials</a>
+      </div>
+      <button class="yt" type="button" data-yt={v.id} aria-label={v.alt} style={`background-image:url('${media(v.overlay)}')`}><span class="play"><Icon name="play" /></span></button>
+    </div>
+  </section>
+
+  <FormBand id="about-form" source="about" />
+</BaseLayout>

@@ -62,8 +62,8 @@ export const LP = {
   proof: [
     { value: 'Since 1999', label: 'Building in Silicon Valley' },
     { value: '19', label: 'Peninsula & South Bay cities served' },
-    // TODO(client): verify rating + count on the live Google Business Profile on launch day; set show:false if unsure.
-    { value: '4.9 ★', label: 'Google rating · 66+ reviews', show: true },
+    // Verified 2026-10-23 on the Google Business Profile: 5.0 average, 58 reviews. Re-check before launch (count changes).
+    { value: '5.0 ★', label: 'Google rating · 50+ reviews', show: true },
     { value: 'Top 7%', label: 'of 336,931 CA contractors · BuildZoom' },
     { value: '#1068849', label: 'CA license · bonded & insured', href: 'license' },
   ] as { value: string; label: string; show?: boolean; href?: string }[],

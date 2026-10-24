@@ -24,7 +24,7 @@ const sm = CITIES.filter((c) => c.county === 'San Mateo County');
         <div class="gallery-grid" style="grid-template-columns:repeat(4,1fr)">
           {(list as typeof CITIES).map((c) => (
             <a class="city-card" href={`/service-areas/${c.slug}/`} style="aspect-ratio:auto;background:#fff">
-              <div class="img"><img src={media(c.tile)} alt={`${c.name}, CA`} width="400" height="400" loading="lazy" /></div>
+              <div class="img"><img src={media(c.tile)} alt="" width="400" height="400" loading="lazy" /></div>
               <div class="label">{c.name}, CA</div>
             </a>
           ))}

@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import Icon from '../components/Icon.astro';
+import TrustLine from '../components/TrustLine.astro';
 import { SITE } from '../config/site';
 import { PAGE_HEROES } from '../data/content';
 import { media } from '../lib/media';
@@ -11,6 +12,7 @@ import { graph, breadcrumbSchema } from '../lib/schema';
   title="Get a Free Quote | Mr. & Mrs. Construction"
   description="Request a free, no-obligation quote and 3D design preview for your kitchen, bathroom, ADU, addition or whole-home remodel in Silicon Valley."
   schema={graph(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Get a free quote', url: '/get-a-free-quote/' }]), { '@type': 'ContactPage', url: `${SITE.url}/get-a-free-quote/` })}
+  ctaHref="#quote-page-form"
 >
   <section class="page-hero" style={`background-image:url('${media(PAGE_HEROES.quote)}')`}>
     <div class="container"><h1>Get a free quote</h1><p>Begin your home transformation journey with Mr. &amp; Mrs. Construction by requesting a free quote today!</p></div>
@@ -19,7 +21,9 @@ import { graph, breadcrumbSchema } from '../lib/schema';
     <div class="container two-col" style="align-items:start">
       <div>
         <h2 class="title-lg" style="font-size:38px">Tell us about your project</h2>
+        <TrustLine align="left" />
         <QuoteForm id="quote-page-form" source="quote-page" theme="light" />
+        <p class="form-reply" style="color:var(--slate)">We reply within one business day · Free, no-obligation consultation</p>
       </div>
       <div class="bg-grey" style="padding:36px 34px">
         <h2 class="title-lg" style="font-size:38px">Let's talk!</h2>

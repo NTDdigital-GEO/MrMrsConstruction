@@ -166,6 +166,17 @@ Google Ads 方面：
 - 首頁的 YouTube 見證影片改用 lite-embed（點擊才載入），速度更快。
 - `/home-test/`、`/home-test1/` 301 轉到首頁；Rank Math 的 sitemap 網址、分類、標籤、作者頁、feed 也都有 301。
 
+## 8.5 CRO 調整（2026/10，依上線前 90 天 GA4 數據：手機佔 76% 流量，手機表單完成率 22%、桌機 65%）
+
+- **手機版 header 還原成原站**：漢堡選單 · GET A FREE QUOTE · 方形 logo，地址列隱藏；手機選單內加「Get a free quote」和電話。
+- **手機版 hero** 照原站不顯示 logo 框；桌機不變。
+- **手機短表單**：主站表單在手機只先顯示 Name / Phone / Email / Project Type，其餘欄位收在「Add project address & details (optional)」；桌機欄位和順序完全不變（`QuoteForm.astro`）。
+- **送出按鈕**改為「Get My Free Quote」，按鈕下方加「We reply within one business day」。
+- **信任元素**：每個表單標題下加一行「★ 5.0 Google rating · 58 reviews · Family-owned since 1999 · CA Lic #1068849」（`TrustLine.astro`，數字只改 `site.ts` 的 `reviews`）。
+- **手機底部固定列** Get a Free Quote｜Call（主站和落地頁共用 `.m-sticky`）；手機上原本的藍色浮動電話鈕隱藏，桌機維持。
+- **LCP**：hero 影片只在桌機載入（`HeroVideo.astro`），手機只載影片第一格的靜態圖（`src/assets/hero-poster.jpg`，建置時轉成 960/1920 寬的 webp 並預先載入）；首頁服務區塊圖片改成 `<img loading="lazy">`。Lighthouse 手機版：首頁 LCP 12.0s → 2.3s（效能 64 → 91），落地頁 4.6s → 2.4s（以 WordPress 媒體來源量測）。
+- 這些改動都在 `git diff` 裡；`package-lock.json` 建議一併提交，讓 Cloudflare 和 GitHub Actions 的套件版本一致。
+
 ## 9. 切換後檢查清單
 
 - [ ] 在 Google Search Console 重新提交 `https://mrandmrscnr.com/sitemap-index.xml`

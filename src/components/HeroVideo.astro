@@ -1,0 +1,29 @@
+---
+// Hero video (Hero_p2.mp4, 3.2 MB) on top of a static first-frame image.
+// Phones: only the <img> (responsive, self-hosted, preloaded) — the video never loads, so the LCP is the image.
+// Desktop: a script attaches the <source> and the autoplaying video covers the image, exactly as on WordPress.
+// Reduced-motion / data-saver users also keep the still image.
+import { SITE } from '../config/site';
+import { media } from '../lib/media';
+import { heroPoster } from '../lib/hero';
+interface Props { class?: string }
+const { class: cls } = Astro.props;
+const p = await heroPoster();
+---
+<img class="hero-poster" src={p.src} srcset={p.srcset} sizes={p.sizes} width={p.width} height={p.height} alt="" fetchpriority="high" decoding="async" />
+<video class={cls} autoplay muted loop playsinline preload="metadata" data-src={media(SITE.heroVideo)} data-poster={p.large} aria-hidden="true"></video>
+<script is:inline>
+  (function () {
+    var v = document.currentScript.previousElementSibling;
+    if (!v || !v.dataset.src) return;
+    var m = window.matchMedia;
+    var saveData = navigator.connection && navigator.connection.saveData;
+    if (m('(min-width: 768px)').matches && !m('(prefers-reduced-motion: reduce)').matches && !saveData) {
+      v.poster = v.dataset.poster;
+      var s = document.createElement('source');
+      s.src = v.dataset.src; s.type = 'video/mp4';
+      v.appendChild(s); v.classList.add('on'); v.load();
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+  })();
+</script>

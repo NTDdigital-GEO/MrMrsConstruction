@@ -19,7 +19,7 @@ const services = ordered(HOME_SERVICE_ORDER);
     <div class="container">
       {services.map((s, i) => (
         <div class={`row${i % 2 ? ' rev' : ''}`}>
-          <div class="media" role="img" aria-label={s.menu} style={`background-image:url('${media(s.homeImage)}')`}></div>
+          <div class="media"><img src={media(s.homeImage)} alt={s.menu} width="600" height="375" loading="lazy" decoding="async" /></div>
           <div>
             <h2 style="font-size:45px">{s.menu}</h2>
             <p>{s.homeTeaser}</p>

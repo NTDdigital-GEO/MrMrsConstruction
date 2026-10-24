@@ -41,6 +41,16 @@ document.addEventListener('click', (ev) => {
   if (event) push({ event, link_url: href, link_text: (a.textContent || '').trim().slice(0, 80), page_path: location.pathname });
 });
 
+/* ---------- lead forms: optional-fields toggle (phones) ---------- */
+document.querySelectorAll<HTMLButtonElement>('.qform .more-toggle').forEach((b) => {
+  b.addEventListener('click', () => {
+    const more = document.getElementById(b.getAttribute('aria-controls') || '');
+    more?.classList.add('open');
+    b.setAttribute('aria-expanded', 'true');
+    more?.querySelector<HTMLElement>('select, input')?.focus();
+  });
+});
+
 /* ---------- lead forms ---------- */
 document.querySelectorAll<HTMLFormElement>('form[data-lead-form]').forEach((form) => {
   const status = form.querySelector<HTMLElement>('.status');

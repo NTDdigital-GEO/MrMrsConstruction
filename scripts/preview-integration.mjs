@@ -33,6 +33,9 @@ export default function previewIntegration() {
         const attr = new RegExp(`(\\s(?:href|src|action|poster|data-[\\w-]+)=["'])/(?!/)${notBase}`, 'g');
         const cssUrl = new RegExp(`(url\\(\\s*["']?)/(?!/)${notBase}`, 'g');
         const jsAstro = new RegExp(`(["'\`])/_astro/`, 'g');
+        // srcset / imagesrcset hold several URLs: prefix each root-relative candidate
+        const srcset = new RegExp(`((?:srcset|imagesrcset)=["'])([^"']*)`, 'g');
+        const cand = new RegExp(`(^|[\\s,])/(?!/)${notBase}`, 'g');
         let n = 0;
 
         if (base) {
@@ -41,7 +44,7 @@ export default function previewIntegration() {
             if (!['.html', '.css', '.js', '.xml', '.txt'].includes(ext)) continue;
             let s = await fs.readFile(f, 'utf8');
             const before = s;
-            if (ext === '.html') s = s.replace(attr, `$1${base}/`).replace(cssUrl, `$1${base}/`);
+            if (ext === '.html') s = s.replace(attr, `$1${base}/`).replace(cssUrl, `$1${base}/`).replace(srcset, (_, p, v) => p + v.replace(cand, `$1${base}/`));
             if (ext === '.css') s = s.replace(cssUrl, `$1${base}/`);
             if (ext === '.js') s = s.replace(jsAstro, `$1${base}/_astro/`);
             if (s !== before) { await fs.writeFile(f, s); n++; }

@@ -1,0 +1,12 @@
+---
+// One-line trust strip shown next to every form: Google rating · family-owned since 1999 · CSLB license.
+// Rating + count come from SITE.reviews (verified against the Google Business Profile; update there only).
+import { SITE } from '../config/site';
+interface Props { light?: boolean; align?: 'center' | 'left' }
+const { light = false, align = 'center' } = Astro.props;
+---
+<p class={`trust${light ? ' light' : ''}${align === 'left' ? ' left' : ''}`}>
+  <span><span class="star" aria-hidden="true">★</span> {SITE.reviews.rating} Google rating · {SITE.reviews.count} reviews</span>
+  <span>Family-owned since {SITE.foundingYear}</span>
+  <span><a href={SITE.licenseUrl} target="_blank" rel="noopener">CA Lic #{SITE.license}</a></span>
+</p>

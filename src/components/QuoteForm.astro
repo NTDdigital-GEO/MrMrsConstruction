@@ -1,5 +1,7 @@
 ---
-// Lead form. variant="full" reproduces the WordPress form (same fields, same order; address fields now optional),
+// Lead form. variant="full" reproduces the WordPress form (same fields, same order on desktop; address fields optional).
+// On phones the full variant shows name / phone / email / project type and folds the rest behind a toggle
+// (GA4, 90 days before launch: mobile form completion 22% vs desktop 65%).
 // variant="short" is the 4-field form for the ads landing page.
 // Submits JSON to SITE.formEndpoint (functions/api/lead.js by default) and redirects to /thank-you/.
 import { SITE, PROJECT_TYPES, HEARD_ABOUT } from '../config/site';
@@ -14,9 +16,9 @@ interface Props {
   submitLabel?: string;
   redirect?: string;
 }
-const { id, variant = 'full', theme = 'dark', source, defaultProject, submitLabel = 'Submit', redirect = '/thank-you/' } = Astro.props;
+const { id, variant = 'full', theme = 'dark', source, defaultProject, submitLabel = 'Get My Free Quote', redirect = '/thank-you/' } = Astro.props;
 ---
-<form class={`qform ${theme}`} id={id} data-lead-form data-source={source} data-redirect={redirect} action={SITE.formEndpoint} method="post" novalidate>
+<form class={`qform ${theme} ${variant}`} id={id} data-lead-form data-source={source} data-redirect={redirect} action={SITE.formEndpoint} method="post" novalidate>
   <div class="grid">
     <label class="sr-only" for={`${id}-name`}>Name</label>
     <input id={`${id}-name`} name="name" type="text" placeholder="Name" autocomplete="name" required />
@@ -25,34 +27,43 @@ const { id, variant = 'full', theme = 'dark', source, defaultProject, submitLabe
     <label class="sr-only" for={`${id}-email`}>E-mail</label>
     <input id={`${id}-email`} name="email" type="email" placeholder="E-mail" autocomplete="email" required />
 
-    {variant === 'full' && (
-      <>
-        <label class="sr-only" for={`${id}-heard`}>How you heard about us</label>
-        <select id={`${id}-heard`} name="heard">
-          <option value="">How You Heard About Us?</option>
-          {HEARD_ABOUT.map((h) => <option>{h}</option>)}
-        </select>
-      </>
-    )}
     <label class="sr-only" for={`${id}-project`}>Project type</label>
     <select id={`${id}-project`} name="project_type" required>
       <option value="">Project Type</option>
       {PROJECT_TYPES.map((p) => <option selected={p === defaultProject}>{p}</option>)}
     </select>
-    <label class="sr-only" for={`${id}-city`}>City</label>
-    <select id={`${id}-city`} name="city">
-      <option value="">City{variant === 'short' ? ' (optional)' : ''}</option>
-      {CITIES.map((c) => <option>{c.name}</option>)}
-      <option>Other</option>
-    </select>
+    {variant === 'short' && (
+      <>
+        <label class="sr-only" for={`${id}-city`}>City</label>
+        <select id={`${id}-city`} name="city">
+          <option value="">City (optional)</option>
+          {CITIES.map((c) => <option>{c.name}</option>)}
+          <option>Other</option>
+        </select>
+      </>
+    )}
     {variant === 'full' && (
       <>
-        <label class="sr-only" for={`${id}-street`}>Street address</label>
-        <input id={`${id}-street`} name="street" type="text" placeholder="Street Address (optional)" autocomplete="address-line1" />
-        <label class="sr-only" for={`${id}-apt`}>Apt, suite, unit</label>
-        <input id={`${id}-apt`} name="apt" type="text" placeholder="Apt, Suite, Unit, Building, Floor, Etc." autocomplete="address-line2" />
-        <label class="sr-only" for={`${id}-zip`}>Zip code</label>
-        <input id={`${id}-zip`} name="zip" type="text" inputmode="numeric" placeholder="Zip Code (optional)" autocomplete="postal-code" />
+        <div class="more" id={`${id}-more`}>
+          <label class="sr-only" for={`${id}-heard`}>How you heard about us</label>
+          <select id={`${id}-heard`} name="heard">
+            <option value="">How You Heard About Us?</option>
+            {HEARD_ABOUT.map((h) => <option>{h}</option>)}
+          </select>
+          <label class="sr-only" for={`${id}-city`}>City</label>
+          <select id={`${id}-city`} name="city">
+            <option value="">City</option>
+            {CITIES.map((c) => <option>{c.name}</option>)}
+            <option>Other</option>
+          </select>
+          <label class="sr-only" for={`${id}-street`}>Street address</label>
+          <input id={`${id}-street`} name="street" type="text" placeholder="Street Address (optional)" autocomplete="address-line1" />
+          <label class="sr-only" for={`${id}-apt`}>Apt, suite, unit</label>
+          <input id={`${id}-apt`} name="apt" type="text" placeholder="Apt, Suite, Unit, Building, Floor, Etc." autocomplete="address-line2" />
+          <label class="sr-only" for={`${id}-zip`}>Zip code</label>
+          <input id={`${id}-zip`} name="zip" type="text" inputmode="numeric" placeholder="Zip Code (optional)" autocomplete="postal-code" />
+        </div>
+        <button class="more-toggle" type="button" aria-expanded="false" aria-controls={`${id}-more`}>Add project address &amp; details (optional)</button>
       </>
     )}
   </div>

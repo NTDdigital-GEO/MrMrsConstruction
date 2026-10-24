@@ -22,6 +22,8 @@ export const SITE = {
   license: '1068849',
   licenseUrl: 'https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/LicenseDetail.aspx?LicNum=1068849',
   foundingYear: 1999,
+  // Google Business Profile rating. Verified 2026-10-23 (5.0 average, 58 reviews). Shown next to every form (TrustLine.astro).
+  reviews: { rating: '5.0', count: 58, verified: '2026-10-23' },
   // TODO(client): confirm hours against the Google Business Profile before launch.
   openingHours: ['Mo-Sa 09:00-17:00'],
   socials: {

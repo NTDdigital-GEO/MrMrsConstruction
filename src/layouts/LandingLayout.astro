@@ -15,6 +15,7 @@ interface Props {
   ctaHref?: string;
   ctaLabel?: string;
   ctaShort?: string;
+  preload?: string | { href: string; srcset?: string; sizes?: string };
 }
 const { ctaHref = '#consult', ctaLabel = 'Book a Consultation', ctaShort = 'Book a Consultation', ...head } = Astro.props;
 const year = new Date().getFullYear();
@@ -39,7 +40,8 @@ const year = new Date().getFullYear();
     <header class="site-header lp-header">
       <div class="container">
         <a class="logo" href="/" aria-label={SITE.name}>
-          <img src={media(SITE.logos.rectBlack)} alt={SITE.shortName} width="170" height="52" />
+          <img class="rect" src={media(SITE.logos.rectBlack)} alt={SITE.shortName} width="170" height="52" />
+          <img class="sq" src={media(SITE.logos.squareBlack)} alt={SITE.shortName} width="52" height="52" />
         </a>
         <div class="lp-header-actions">
           <a class="lp-phone" href={SITE.phoneHref} data-track="call_click"><Icon name="phone" /><span>{SITE.phone}</span></a>
@@ -71,9 +73,9 @@ const year = new Date().getFullYear();
       <p class="lp-copy">© {year} {SITE.shortName}. All rights reserved.</p>
     </footer>
 
-    <div class="lp-sticky" aria-label="Quick actions">
-      <a class="lp-sticky-cta" href={ctaHref} data-track="click_get_quote">{ctaShort}</a>
-      <a class="lp-sticky-call" href={SITE.phoneHref} aria-label={`Call ${SITE.phone}`}><Icon name="phone" /> Call</a>
+    <div class="m-sticky" aria-label="Quick actions">
+      <a class="m-sticky-cta" href={ctaHref} data-track="click_get_quote">{ctaShort}</a>
+      <a class="m-sticky-call" href={SITE.phoneHref} aria-label={`Call ${SITE.phone}`}><Icon name="phone" /> Call</a>
     </div>
 
     {SITE.preview && <div class="preview-badge" role="note">Preview — not the live site</div>}

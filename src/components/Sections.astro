@@ -58,7 +58,7 @@ const ytThumb = (v: { overlay: string }) => media(v.overlay);
       <div class="track" style="margin-top:22px">
         {HOME_CITY_ORDER.filter((n) => n !== p.exclude).map(cityByName).map((c) => (
           <a class="city-card" href={`/service-areas/${c.slug}/`}>
-            <div class="img"><img src={media(c.tile)} alt={`${c.name}, CA`} width="400" height="400" loading="lazy" /></div>
+            <div class="img"><img src={media(c.tile)} alt="" width="400" height="400" loading="lazy" /></div>
             <div class="label">{c.name}, CA</div>
           </a>
         ))}

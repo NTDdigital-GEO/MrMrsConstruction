@@ -4,6 +4,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import FormBand from '../components/FormBand.astro';
+import HeroVideo from '../components/HeroVideo.astro';
 import Sections from '../components/Sections.astro';
 import { SITE } from '../config/site';
 import { media } from '../lib/media';
@@ -11,8 +12,10 @@ import { graph } from '../lib/schema';
 import { HOME, HOME_WHY_US } from '../data/content';
 import { HOME_SERVICE_ORDER, ordered } from '../data/services';
 import { latestPosts } from '../lib/posts';
+import { heroPoster } from '../lib/hero';
 
 const services = ordered(HOME_SERVICE_ORDER);
+const poster = await heroPoster();
 const posts = await latestPosts(8);
 const schema = graph({ '@type': 'WebPage', '@id': `${SITE.url}/#webpage`, url: `${SITE.url}/`, name: 'Silicon Valley Remodeling & ADU Builder | Mr. & Mrs. Construction', isPartOf: { '@id': `${SITE.url}/#website` }, about: { '@id': `${SITE.url}/#organization` } });
 ---
@@ -20,12 +23,11 @@ const schema = graph({ '@type': 'WebPage', '@id': `${SITE.url}/#webpage`, url: `
   title="Silicon Valley Remodeling & ADU Builder | Mr. & Mrs. Construction"
   description="Licensed design-build remodeler in Santa Clara (CA Lic #1068849). Kitchens, baths, ADUs & additions across 19 Bay Area cities. Free 3D design preview."
   schema={schema}
+  preload={{ href: poster.src, srcset: poster.srcset, sizes: poster.sizes }}
 >
   <!-- 1. Hero video -->
   <section class="hero-video" aria-label="Mr. & Mrs. Construction">
-    <video autoplay muted loop playsinline preload="metadata" poster={media('2024/01/Mr_Mrs_San-Jose_Gold-Creek-Way_3_Print.webp')}>
-      <source src={media(SITE.heroVideo)} type="video/mp4" />
-    </video>
+    <HeroVideo />
     <div class="container">
       <div class="hero-box">
         <img src={media(SITE.logos.squareTaglineWhite)} alt="Mr. & Mrs. Construction & Remodeling" width="118" height="118" />
@@ -46,7 +48,7 @@ const schema = graph({ '@type': 'WebPage', '@id': `${SITE.url}/#webpage`, url: `
         <a class="btn" href="/about-us/">Keep Reading</a>
       </div>
       <div class="pics">
-        <div class="pic"><img src={media(HOME.introImages[0])} alt="Remodeled Silicon Valley kitchen with custom cabinetry" width="420" height="420" fetchpriority="high" /></div>
+        <div class="pic"><img src={media(HOME.introImages[0])} alt="Remodeled Silicon Valley kitchen with custom cabinetry" width="420" height="420" /></div>
         <div class="pic"><img src={media(HOME.introImages[1])} alt="San Jose remodel by Mr. & Mrs. Construction" width="420" height="420" /></div>
       </div>
     </div>
@@ -59,7 +61,7 @@ const schema = graph({ '@type': 'WebPage', '@id': `${SITE.url}/#webpage`, url: `
       <p class="title-md center" style="font-family:var(--head);color:var(--slate)">Unveiling the Potential of Your Home through Expert Remodeling</p>
       {services.map((s, i) => (
         <div class={`row${i % 2 ? ' rev' : ''}`}>
-          <div class="media" role="img" aria-label={s.menu} style={`background-image:url('${media(s.homeImage)}')`}></div>
+          <div class="media"><img src={media(s.homeImage)} alt={s.menu} width="600" height="375" loading="lazy" decoding="async" /></div>
           <div>
             <h3 class="h4" style="font-size:45px">{s.menu === 'ADU Construction' ? 'ADUs Construction' : s.menu === 'Hardscaping & Landscaping' ? 'Landscaping & Hardscaping' : s.menu}</h3>
             <p>{s.homeTeaser}</p>
@@ -95,7 +97,7 @@ const schema = graph({ '@type': 'WebPage', '@id': `${SITE.url}/#webpage`, url: `
   <section class="section bg-grey" aria-labelledby="home-3d">
     <div class="container split">
       <div class="compare">
-        <img src={media(HOME.threeD.photo)} alt="Finished remodel photograph" width="800" height="500" loading="lazy" />
+        <img src={media(HOME.threeD.photo)} alt="Finished remodel" width="800" height="500" loading="lazy" />
         <img class="top" src={media(HOME.threeD.render)} alt="3D design rendering of the same space" width="800" height="500" loading="lazy" />
         <span class="lbl l">3D design</span><span class="lbl r">Built</span>
         <span class="handle"></span>

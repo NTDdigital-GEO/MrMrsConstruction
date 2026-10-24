@@ -3,6 +3,7 @@
 // Ad message match: append ?service=kitchen|bathroom|adu|addition|remodel|newhome to the final URL.
 import LandingLayout from '../layouts/LandingLayout.astro';
 import QuoteForm from '../components/QuoteForm.astro';
+import HeroVideo from '../components/HeroVideo.astro';
 import Icon from '../components/Icon.astro';
 import { SITE } from '../config/site';
 import { LP } from '../data/landing';
@@ -11,19 +12,19 @@ import { SERVICES } from '../data/services';
 import { CITIES } from '../data/cities';
 import { media } from '../lib/media';
 import { businessSchema, faqSchema, graph } from '../lib/schema';
+import { heroPoster } from '../lib/hero';
 
 const svc = (slug: string) => SERVICES.find((s) => s.slug === slug);
 const proof = LP.proof.filter((p) => p.show !== false);
+const poster = await heroPoster();
 const schema = graph(businessSchema(), faqSchema(LP.faqs.map((f) => ({ q: f.q, a: f.a }))));
 ---
 <LandingLayout title={LP.title} description={LP.description} image={HOME.threeD.render} schema={schema}
-  ctaLabel="Book a Consultation" ctaShort={LP.ctaShort}>
+  ctaLabel="Book a Consultation" ctaShort={LP.ctaShort} preload={{ href: poster.src, srcset: poster.srcset, sizes: poster.sizes }}>
 
   <!-- 1. Hero: same Hero_p2.mp4 video as the homepage, headline + short form on top -->
   <section class="lp-hero" aria-labelledby="lp-h1">
-    <video autoplay muted loop playsinline preload="metadata" poster={media('2024/01/Mr_Mrs_San-Jose_Gold-Creek-Way_3_Print.webp')} aria-hidden="true">
-      <source src={media(SITE.heroVideo)} type="video/mp4" />
-    </video>
+    <HeroVideo />
     <div class="container lp-hero-grid">
       <div class="lp-hero-copy">
         <p class="lp-eyebrow" data-lp="eyebrow">{LP.hero.eyebrow}</p>
@@ -127,7 +128,7 @@ const schema = graph(businessSchema(), faqSchema(LP.faqs.map((f) => ({ q: f.q, a
   <section class="section" aria-labelledby="lp-proof3d">
     <div class="container split">
       <div class="compare">
-        <img src={media(HOME.threeD.photo)} alt="Finished remodel photograph" width="800" height="500" loading="lazy" />
+        <img src={media(HOME.threeD.photo)} alt="Finished remodel" width="800" height="500" loading="lazy" />
         <img class="top" src={media(HOME.threeD.render)} alt="3D design rendering of the same space" width="800" height="500" loading="lazy" />
         <span class="lbl l">3D design</span><span class="lbl r">Built</span>
         <span class="handle"></span>

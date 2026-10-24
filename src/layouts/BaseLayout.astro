@@ -12,8 +12,10 @@ interface Props {
   noindex?: boolean;
   schema?: object;
   type?: 'website' | 'article';
+  preload?: string | { href: string; srcset?: string; sizes?: string };
+  ctaHref?: string;                 // target of the mobile sticky "Get a free quote" button
 }
-const props = Astro.props;
+const { ctaHref = '/get-a-free-quote/', ...props } = Astro.props;
 ---
 <!doctype html>
 <html lang="en-US">
@@ -31,6 +33,10 @@ const props = Astro.props;
     </main>
     <Footer />
     <a class="call-fab" href={SITE.phoneHref} aria-label={`Call ${SITE.phone}`}><Icon name="phone" /></a>
+    <div class="m-sticky" aria-label="Quick actions">
+      <a class="m-sticky-cta" href={ctaHref} data-track="click_get_quote">Get a Free Quote</a>
+      <a class="m-sticky-call" href={SITE.phoneHref} aria-label={`Call ${SITE.phone}`}><Icon name="phone" /> Call</a>
+    </div>
     <button class="to-top" type="button" aria-label="Back to top"><Icon name="up" /></button>
     {SITE.preview && <div class="preview-badge" role="note">Preview — not the live site</div>}
     <script>

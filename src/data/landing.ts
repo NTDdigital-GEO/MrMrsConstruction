@@ -1,6 +1,8 @@
 // Copy + settings for the Google/Meta Ads landing page: /free-3d-design-consultation/
 // Built from the /home-test/ audit (Oct 2026). Items marked TODO(client) must be confirmed by the owners before ads go live.
 
+import { SITE } from '../config/site';
+
 export const LP = {
   path: '/free-3d-design-consultation/',
   title: 'Complimentary 3D Design Consultation | Mr. & Mrs. Construction',
@@ -62,8 +64,8 @@ export const LP = {
   proof: [
     { value: 'Since 1999', label: 'Building in Silicon Valley' },
     { value: '19', label: 'Peninsula & South Bay cities served' },
-    // Verified 2026-10-23 on the Google Business Profile: 5.0 average, 58 reviews. Re-check before launch (count changes).
-    { value: '5.0 ★', label: 'Google rating · 50+ reviews', show: true },
+    // Rating + count maintained in src/config/site.ts (SITE.reviews).
+    { value: `${SITE.reviews.rating} ★`, label: `Google rating · ${SITE.reviews.count} reviews`, show: true },
     { value: 'Top 7%', label: 'of 336,931 CA contractors · BuildZoom' },
     { value: '#1068849', label: 'CA license · bonded & insured', href: 'license' },
   ] as { value: string; label: string; show?: boolean; href?: string }[],

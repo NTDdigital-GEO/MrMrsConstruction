@@ -174,7 +174,7 @@ Google Ads 方面：
 - **送出按鈕**改為「Get My Free Quote」，按鈕下方加「We reply within one business day」。
 - **信任元素**：每個表單標題下加一行「★ 5.0 Google rating · 58 reviews · Family-owned since 1999 · CA Lic #1068849」（`TrustLine.astro`，數字只改 `site.ts` 的 `reviews`）。
 - **手機底部固定列** Get a Free Quote｜Call（主站和落地頁共用 `.m-sticky`）；手機上原本的藍色浮動電話鈕隱藏，桌機維持。
-- **LCP**：hero 影片只在桌機載入（`HeroVideo.astro`），手機只載影片第一格的靜態圖（`src/assets/hero-poster.jpg`，建置時轉成 960/1920 寬的 webp 並預先載入）；首頁服務區塊圖片改成 `<img loading="lazy">`。Lighthouse 手機版：首頁 LCP 12.0s → 2.3s（效能 64 → 91），落地頁 4.6s → 2.4s（以 WordPress 媒體來源量測）。
+- **LCP**：hero 影片只在桌機（視窗寬度 ≥ 768px）載入（`HeroVideo.astro`），手機只載影片第一格的靜態圖（`src/assets/hero-poster.jpg`，建置時轉成 960/1920 寬的 webp 並預先載入）；首頁服務區塊圖片改成 `<img loading="lazy">`。Lighthouse 手機版：首頁 LCP 12.0s → 2.3s（效能 64 → 91），落地頁 4.6s → 2.4s（以 WordPress 媒體來源量測）。
 - 這些改動都在 `git diff` 裡；`package-lock.json` 建議一併提交，讓 Cloudflare 和 GitHub Actions 的套件版本一致。
 
 ## 9. 切換後檢查清單

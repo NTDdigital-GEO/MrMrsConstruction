@@ -1,8 +1,8 @@
 ---
 // Hero video (Hero_p2.mp4, 3.2 MB) on top of a static first-frame image.
 // Phones: only the <img> (responsive, self-hosted, preloaded) — the video never loads, so the LCP is the image.
-// Desktop: a script attaches the <source> and the autoplaying video covers the image, exactly as on WordPress.
-// Reduced-motion / data-saver users also keep the still image.
+// Desktop (viewport >= 768px): a script attaches the <source> and the autoplaying video covers the image,
+// exactly as on WordPress. The only rule is viewport width, so desktop always gets the video.
 import { SITE } from '../config/site';
 import { media } from '../lib/media';
 import { heroPoster } from '../lib/hero';
@@ -16,9 +16,7 @@ const p = await heroPoster();
   (function () {
     var v = document.currentScript.previousElementSibling;
     if (!v || !v.dataset.src) return;
-    var m = window.matchMedia;
-    var saveData = navigator.connection && navigator.connection.saveData;
-    if (m('(min-width: 768px)').matches && !m('(prefers-reduced-motion: reduce)').matches && !saveData) {
+    if (window.matchMedia('(min-width: 768px)').matches) {
       v.poster = v.dataset.poster;
       var s = document.createElement('source');
       s.src = v.dataset.src; s.type = 'video/mp4';
